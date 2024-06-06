@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name" translatable="false">Validation_Etude</string>
+    <string name="void_text" translatable="false" />
+    <string name="alias_hint">Custom name</string>
+    <string name="alias_helper_text">The pole by the pond</string>
+    <string name="login">Login</string>
+    <string name="enter_login">Enter login</string>
+    <string name="password">Password</string>
+    <string name="enter_password">Enter password</string>
+    <string name="confirm_password">Confirm password</string>
+    <string name="remember_me">Remember me</string>
+    <string name="submit">Submit</string>
+    <string name="sign_up">Sign up</string>
+    <string name="forgot_password">Forgot password</string>
+    <string name="license">License</string>
+    <string name="smth_get_wrong">Something get wrong</string>
+    <string name="not_enough_chars">Text does not have enough chars</string>
+    <string name="is_too_long">Text is too long</string>
+    <string name="not_allowed_chars">Not allowed chars</string>
+</resources>
