@@ -2,8 +2,12 @@ package ru.polescanner.validation_etude.ui.signin
 
 import androidx.compose.runtime.Immutable
 import arrow.core.Either
+import arrow.core.left
 import arrow.core.raise.either
+import arrow.core.right
 import ru.polescanner.validation_etude.R
+import ru.polescanner.validation_etude.domain.general.BooleanValidationError
+import ru.polescanner.validation_etude.domain.general.ErrorType
 import ru.polescanner.validation_etude.domain.general.Login
 import ru.polescanner.validation_etude.domain.general.Password
 import ru.polescanner.validation_etude.domain.security.Credentials
@@ -14,6 +18,7 @@ import ru.polescanner.validation_etude.ui.reusable.util.ValidOrFocusedAtCheck
 import ru.polescanner.validation_etude.ui.reusable.util.atMostOneFocused
 import ru.polescanner.validation_etude.ui.reusable.util.parseOrPrompt
 import ru.polescanner.validation_etude.ui.reusable.util.toFocusable
+import ru.polescanner.validation_etude.ui.reusable.util.toNullableFocusable
 
 @Immutable
 sealed interface SignInState: UiState {
@@ -21,54 +26,22 @@ sealed interface SignInState: UiState {
     data class Main(
         val login: ValidOrFocusedAtCheck<String> = "".toFocusable(),
         val password: ValidOrFocusedAtCheck<String> = "".toFocusable(),
-        val isLoggedIn: Boolean = false
+        val isLoggedIn: ValidOrFocusedAtCheck<Boolean?> = null.toNullableFocusable()
     ): SignInState { //ToDo keepMeLoggedIn isTokenExpired RememberMe etc. - choose the best
 
         init {
-            require(
-                atMostOneFocused(login, password)
-            )
+            require( atMostOneFocused() ) { "only one view can be focused!" }
         }
 
-        val isValid: Boolean = listOf(
-            login.value.isNotBlank(),
-            password.value.isNotBlank()
-        ).all { it }
-
-        fun checkIfValid(informUser: (Int) -> Unit): Main =
-            when {
-                login.value.isBlank() -> {
-                    informUser(R.string.login_error)
-                    copy(login = login.setFocus())
-                }
-
-                password.value.isBlank() -> {
-                    informUser(R.string.password_error)
-                    copy(password = password.setFocus())
-                }
-
-                else -> this
-            }
-
-        fun clearFocus(): Main = this.copy(
-            login = login.clearFocus(),
-            password = password.clearFocus()
-        )
+        fun Boolean?.check(): Either<ErrorType, Boolean> = this?.right() ?: BooleanValidationError.left()
 
         fun toCredentials(inform: (UiText) -> Unit): Either<UiState, Credentials> = either {
             Credentials(
                 ::login.parseOrPrompt(inform) { Login(it) }.bind(),
                 ::password.parseOrPrompt(inform) { Password(it) }.bind(),
-                false
+                ::isLoggedIn.parseOrPrompt(inform) { it.check() }.bind()
             )
         }
-        fun <E> Either<UiState, E>.proceed(left: (UiState) -> Unit, right (E) -> Unit) = {
-            when (this) {
-                is Either.Left -> this@Main.copy(this.value as Main)
-                is Either.Right -> TODO()
-            }
-        }
-
     }
     data class Error(val error: UiText): SignInState
     data class ForgotPassword(val email: String = ""): SignInState

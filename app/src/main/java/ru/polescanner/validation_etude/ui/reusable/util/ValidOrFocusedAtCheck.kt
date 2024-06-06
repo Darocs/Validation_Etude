@@ -3,12 +3,15 @@ package ru.polescanner.validation_etude.ui.reusable.util
 import arrow.core.Either
 import ru.polescanner.validation_etude.domain.general.DomainPrimitive
 import ru.polescanner.validation_etude.domain.general.ErrorType
+import ru.polescanner.validation_etude.ui.reusable.kotlinapi.constructorProperties
 import ru.polescanner.validation_etude.ui.reusable.kotlinapi.copyDataObject
 import ru.polescanner.validation_etude.ui.reusable.kotlinapi.readInstanceProperty
 import kotlin.jvm.internal.CallableReference
+import kotlin.reflect.KClass
 import kotlin.reflect.KProperty0
 import kotlin.reflect.full.createType
 import kotlin.reflect.full.instanceParameter
+import kotlin.reflect.full.isSubtypeOf
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.full.primaryConstructor
 
@@ -42,14 +45,14 @@ fun atMostOneFocused(vararg elements: ValidOrFocusedAtCheck<out Any?>): Boolean 
  * @param [instance] instance of the UiState data class
  * @throws [IllegalArgumentException] if property of other than [ValidOrFocusedAtCheck] type
  */
-fun <C: Any> atMostOneFocused(instance: C): Boolean {
-    val kClass = instance::class
+fun <U: UiState> U.atMostOneFocused(): Boolean {
+    val kClass = this::class
     require(kClass.isData) { "only data classes instances are supported" }
     val propertyNames = kClass.primaryConstructor!!.parameters.map { it.name!! }
     val propertyValues = propertyNames.map { name ->
         when (val type = kClass.memberProperties.find {it.name == name}!!.returnType) {
             ValidOrFocusedAtCheck::class.createType(type.arguments) ->
-                readInstanceProperty<ValidOrFocusedAtCheck<*>>(instance, name)
+                readInstanceProperty<ValidOrFocusedAtCheck<*>>(this, name)
             else -> throw IllegalArgumentException(
                 "not applicable type of the field. Only ${ValidOrFocusedAtCheck::class.simpleName} supported"
             )
@@ -60,7 +63,7 @@ fun <C: Any> atMostOneFocused(instance: C): Boolean {
 
 //https://stackoverflow.com/questions/43822920/kotlin-check-if-function-requires-instance-parameter
 @Suppress("UNCHECKED_CAST")
-fun <E, D: DomainPrimitive> KProperty0<Focusable<E>>.parseOrPrompt(
+fun <E, D: Any> KProperty0<Focusable<E>>.parseOrPrompt(
     deliver: (UiText) -> Unit,
     parse: (E) -> Either<ErrorType, D>
 ): Either<UiState, D> = this.get().value.let{parse(it)}
@@ -82,3 +85,14 @@ private fun <E, U: UiState> U.toFocusAtView(
     val focusedPropertyValue = toFocus.get().setFocus()
     return this.copyDataObject(toFocus to focusedPropertyValue)
 }
+
+fun <U: UiState> U.clearFocus(): U {
+    val dataClass = this::class
+    require(dataClass.isData) { "Type of object to clear focus must be a data class" }
+    val properties = this::class.constructorProperties
+        .filter { it.returnType.isSubtypeOf(ValidOrFocusedAtCheck::class.createType()) }
+    val propertiesWithNewValues = properties.map{ it to
+        it::class.members.first{ it.name == "clearFocus" }.call() }.toTypedArray()
+    return this.copyDataObject(*propertiesWithNewValues)
+}
+

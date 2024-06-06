@@ -1,9 +1,12 @@
 package ru.polescanner.validation_etude.ui.reusable.kotlinapi
 
+import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 import kotlin.reflect.KProperty1
+import kotlin.reflect.full.declaredMemberProperties
 import kotlin.reflect.full.instanceParameter
 import kotlin.reflect.full.memberFunctions
+import kotlin.reflect.full.primaryConstructor
 
 /**
  * A function to read a property from an instance of a class given the property name
@@ -64,3 +67,15 @@ fun <T : Any> T.copyDataObject(vararg properties: Pair<KProperty<*>, Any?>): T {
     @Suppress("UNCHECKED_CAST")
     return copyFunction.callBy(parameters) as T
 }
+
+val <T : Any> KClass<T>.constructorProperties
+    get() =
+        primaryConstructor?.let { ctor ->
+            declaredMemberProperties.filter { prop ->
+                ctor.parameters.any { param ->
+                    param.name == prop.name
+                            &&
+                            param.type == prop.returnType
+                }
+            }
+        } ?: emptyList()

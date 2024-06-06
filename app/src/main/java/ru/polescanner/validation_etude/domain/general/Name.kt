@@ -21,6 +21,8 @@ interface Name : DomainPrimitive {
     }
 }
 
+data object BooleanValidationError: ErrorType
+
 private fun <V : Name> V.validated(
     minLen: Int = 0,
     maxLen: Int = 50,
@@ -64,3 +66,4 @@ value class Password private constructor(override val value: String) : Name {
                 )
     }
 }
+

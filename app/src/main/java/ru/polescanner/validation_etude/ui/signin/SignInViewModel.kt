@@ -26,7 +26,9 @@ import ru.polescanner.droidmvp.domainext.general.TrialMode
 import ru.polescanner.validation_etude.domain.security.Credentials
 import ru.polescanner.validation_etude.ui.reusable.util.AbstractViewModel
 import ru.polescanner.validation_etude.ui.reusable.util.UiText
+import ru.polescanner.validation_etude.ui.reusable.util.clearFocus
 import ru.polescanner.validation_etude.ui.reusable.util.toFocusable
+import ru.polescanner.validation_etude.ui.reusable.util.toNullableFocusable
 import ru.polescanner.validation_etude.ui.signin.SignInEvent.*
 import java.time.Instant
 import java.time.temporal.ChronoUnit
@@ -88,7 +90,7 @@ class SignInViewModel(
                 state().clearFocus().copy(password = e.password.toFocusable())
 
             is OnRememberMeFor30DaysChanged -> state =
-                state().copy(isLoggedIn = e.remember)
+                state().clearFocus().copy(isLoggedIn = e.remember.toNullableFocusable())
 
             //MainScreen actions click
             // ToDo Check that we don't use e content but use state!!!!
