@@ -2,20 +2,18 @@ package ru.polescanner.validation_etude.ui.signin
 
 import androidx.compose.runtime.Immutable
 import arrow.core.Either
-import arrow.core.zip
+import arrow.core.raise.either
 import ru.polescanner.validation_etude.R
 import ru.polescanner.validation_etude.domain.general.Login
-import ru.polescanner.validation_etude.domain.general.Name
 import ru.polescanner.validation_etude.domain.general.Password
 import ru.polescanner.validation_etude.domain.security.Credentials
-import ru.polescanner.validation_etude.ui.reusable.kotlinapi.toStateWithFocus
 import ru.polescanner.validation_etude.ui.reusable.util.UiEvent
 import ru.polescanner.validation_etude.ui.reusable.util.UiState
 import ru.polescanner.validation_etude.ui.reusable.util.UiText
 import ru.polescanner.validation_etude.ui.reusable.util.ValidOrFocusedAtCheck
 import ru.polescanner.validation_etude.ui.reusable.util.atMostOneFocused
+import ru.polescanner.validation_etude.ui.reusable.util.parseOrPrompt
 import ru.polescanner.validation_etude.ui.reusable.util.toFocusable
-import kotlin.reflect.KProperty0
 
 @Immutable
 sealed interface SignInState: UiState {
@@ -57,20 +55,13 @@ sealed interface SignInState: UiState {
             password = password.clearFocus()
         )
 
-        fun toCredentialsArr(inform: (UiText) -> Unit) : Either<Main, Credentials> {
-            fun <P> toState(
-                e: Name.ValidationError,
-                focusedView: KProperty0<ValidOrFocusedAtCheck<P>>
-            ) : Main = toStateWithFocus(this, inform, e, focusedView) as Main
-
-            return login.toLogin().mapLeft { toState(it, ::login) }.zip(
-                password.value.toPassword().mapLeft { toState(it, ::password) },
-                password.value.toPassword().mapLeft { toState(it, ::password) }
-            ) { a, b, c ->
-                    Credentials(a, b, false)
-            }
+        fun toCredentials(inform: (UiText) -> Unit): Either<Main, Credentials> = either {
+            Credentials(
+                ::login.parseOrPrompt(inform , this@Main) { Login(it) }.bind(),
+                ::password.parseOrPrompt(inform, this@Main) { Password(it) }.bind(),
+                false
+            )
         }
-
     }
     data class Error(val error: UiText): SignInState
     data class ForgotPassword(val email: String = ""): SignInState

@@ -23,7 +23,6 @@ import ru.polescanner.droidmvp.datasource.dto.ktorHttpClient
 import ru.polescanner.droidmvp.datasource.dto.ktorHttpClientAuth
 import ru.polescanner.droidmvp.datasource.dto.toEntity
 import ru.polescanner.droidmvp.domainext.general.TrialMode
-import ru.polescanner.droidmvp.ui.reusable.util.toFocusable
 import ru.polescanner.validation_etude.ui.reusable.util.AbstractViewModel
 import ru.polescanner.validation_etude.ui.reusable.util.UiText
 import ru.polescanner.validation_etude.ui.reusable.util.toFocusable
@@ -89,7 +88,7 @@ class SignInViewModel(
 
             //MainScreen actions click
             is SignInEvent.OnLogin -> {
-                val result = (state as SignInState.Main).toCredentialsArr {
+                val result = (state as SignInState.Main).toCredentials {
                     _snackbarText.value = it
                 }
                 if (result is Either.Left) state = result.value

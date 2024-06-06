@@ -1,7 +1,14 @@
 package ru.polescanner.validation_etude.ui.reusable.util
 
+import arrow.core.Either
+import ru.polescanner.validation_etude.domain.general.DomainPrimitive
+import ru.polescanner.validation_etude.domain.general.ErrorType
+import ru.polescanner.validation_etude.ui.reusable.kotlinapi.copyDataObject
 import ru.polescanner.validation_etude.ui.reusable.kotlinapi.readInstanceProperty
+import kotlin.jvm.internal.CallableReference
+import kotlin.reflect.KProperty0
 import kotlin.reflect.full.createType
+import kotlin.reflect.full.instanceParameter
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.full.primaryConstructor
 
@@ -27,7 +34,7 @@ fun atMostOneFocused(vararg elements: ValidOrFocusedAtCheck<out Any?>): Boolean 
 
 /**
  * Reflection version to check invariance that only one view element isFocused in the moment
- * for [ValidOrFocusedAtCheck] properties of the [UiState] data class instance
+ * for [ValidOrFocusedAtCheck] properties of the [UiState] data class instance.
  * Properties of other types, non-ValidOrFocusedAtCheck, not supported
  *
  * requires: kotlin reflection
@@ -51,3 +58,28 @@ fun <C: Any> atMostOneFocused(instance: C): Boolean {
     return propertyValues.count { it.isFocused } <= 1
 }
 
+//https://stackoverflow.com/questions/43822920/kotlin-check-if-function-requires-instance-parameter
+@Suppress("UNCHECKED_CAST")
+fun <E, D: DomainPrimitive, U: UiState> KProperty0<Focusable<E>>.parseOrPrompt(
+    deliver: (UiText) -> Unit,
+    state: U,
+    parse: (E) -> Either<ErrorType, D>
+): Either<U, D> = this.get().value.let{parse(it)}
+    .mapLeft {
+        require(this.instanceParameter != null)
+        { "the function receiver type must be a Data class property, declared in the primary constructor"}
+        val s = (this as CallableReference).boundReceiver as U
+        //(this. instanceParameter!!.type as KClass<*>).pro
+        s.toFocusAtView(this){ deliver(it.toMessage()) } /*as U*/ }
+
+
+private fun <E, U: UiState> U.toFocusAtView(
+    toFocus: KProperty0<Focusable<E>>,
+    deliverMessage: () -> Unit = {}
+): U {
+    require(toFocus.name in this::class.primaryConstructor!!.parameters.map { it.name })
+    { "property toFocus must be a Data class property declared in the primary constructor" }
+    deliverMessage()
+    val focusedPropertyValue = toFocus.get().setFocus()
+    return this.copyDataObject(toFocus to focusedPropertyValue)
+}

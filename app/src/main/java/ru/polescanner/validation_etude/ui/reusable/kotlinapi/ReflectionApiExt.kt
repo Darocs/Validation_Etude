@@ -1,16 +1,9 @@
 package ru.polescanner.validation_etude.ui.reusable.kotlinapi
 
-import ru.polescanner.validation_etude.domain.general.ErrorType
-import ru.polescanner.validation_etude.ui.reusable.util.UiState
-import ru.polescanner.validation_etude.ui.reusable.util.UiText
-import ru.polescanner.validation_etude.ui.reusable.util.ValidOrFocusedAtCheck
-import ru.polescanner.validation_etude.ui.reusable.util.toMessage
 import kotlin.reflect.KProperty
-import kotlin.reflect.KProperty0
 import kotlin.reflect.KProperty1
 import kotlin.reflect.full.instanceParameter
 import kotlin.reflect.full.memberFunctions
-import kotlin.reflect.full.primaryConstructor
 
 /**
  * A function to read a property from an instance of a class given the property name
@@ -70,17 +63,4 @@ fun <T : Any> T.copyDataObject(vararg properties: Pair<KProperty<*>, Any?>): T {
     }
     @Suppress("UNCHECKED_CAST")
     return copyFunction.callBy(parameters) as T
-}
-
-fun <P> toStateWithFocus(
-    state: UiState,
-    inform: (UiText) -> Unit,
-    t: ErrorType,
-    propertyToFocus: KProperty0<ValidOrFocusedAtCheck<P>>
-): UiState {
-    require(propertyToFocus.name in state::class.primaryConstructor!!.parameters.map { it.name })
-    { "propertyToFocus must be in Data class properties" }
-    inform(t.toMessage())
-    val focusedPropertyValue = propertyToFocus.get().setFocus()
-    return state.copyDataObject(propertyToFocus to focusedPropertyValue)
 }
