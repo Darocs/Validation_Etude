@@ -55,13 +55,20 @@ sealed interface SignInState: UiState {
             password = password.clearFocus()
         )
 
-        fun toCredentials(inform: (UiText) -> Unit): Either<Main, Credentials> = either {
+        fun toCredentials(inform: (UiText) -> Unit): Either<UiState, Credentials> = either {
             Credentials(
-                ::login.parseOrPrompt(inform , this@Main) { Login(it) }.bind(),
-                ::password.parseOrPrompt(inform, this@Main) { Password(it) }.bind(),
+                ::login.parseOrPrompt(inform) { Login(it) }.bind(),
+                ::password.parseOrPrompt(inform) { Password(it) }.bind(),
                 false
             )
         }
+        fun <E> Either<UiState, E>.proceed(left: (UiState) -> Unit, right (E) -> Unit) = {
+            when (this) {
+                is Either.Left -> this@Main.copy(this.value as Main)
+                is Either.Right -> TODO()
+            }
+        }
+
     }
     data class Error(val error: UiText): SignInState
     data class ForgotPassword(val email: String = ""): SignInState

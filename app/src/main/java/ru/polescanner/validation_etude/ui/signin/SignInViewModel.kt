@@ -23,9 +23,11 @@ import ru.polescanner.droidmvp.datasource.dto.ktorHttpClient
 import ru.polescanner.droidmvp.datasource.dto.ktorHttpClientAuth
 import ru.polescanner.droidmvp.datasource.dto.toEntity
 import ru.polescanner.droidmvp.domainext.general.TrialMode
+import ru.polescanner.validation_etude.domain.security.Credentials
 import ru.polescanner.validation_etude.ui.reusable.util.AbstractViewModel
 import ru.polescanner.validation_etude.ui.reusable.util.UiText
 import ru.polescanner.validation_etude.ui.reusable.util.toFocusable
+import ru.polescanner.validation_etude.ui.signin.SignInEvent.*
 import java.time.Instant
 import java.time.temporal.ChronoUnit
 
@@ -66,7 +68,7 @@ class SignInViewModel(
         viewModelScope.launch {
             if (isLoggedIn) {
                 prefsRepo.userTokens()?.let{
-                    onEvent(SignInEvent.OnSuccess)
+                    onEvent(OnSuccess)
                 }
                     ?: _stateFlow.update { SignInState.Main() }
             } else {
@@ -74,43 +76,37 @@ class SignInViewModel(
             }
         }
     }
+    private fun toServer(c: Credentials): Unit = TODO()
 
+    private fun state() = state as SignInState.Main
     override fun onEvent(e: SignInEvent) {
         when (e) { //MainScreen editing
-            is SignInEvent.OnLoginChanged -> state =
-                (state as SignInState.Main).clearFocus().copy(login = e.login.toFocusable())
+            is OnLoginChanged -> state =
+                state().clearFocus().copy(login = e.login.toFocusable())
 
-            is SignInEvent.OnPasswordChanged -> state =
-                (state as SignInState.Main).clearFocus().copy(password = e.password.toFocusable())
+            is OnPasswordChanged -> state =
+                state().clearFocus().copy(password = e.password.toFocusable())
 
-            is SignInEvent.OnRememberMeFor30DaysChanged -> state =
-                (state as SignInState.Main).copy(isLoggedIn = e.remember)
+            is OnRememberMeFor30DaysChanged -> state =
+                state().copy(isLoggedIn = e.remember)
 
             //MainScreen actions click
-            is SignInEvent.OnLogin -> {
-                val result = (state as SignInState.Main).toCredentials {
-                    _snackbarText.value = it
-                }
-                if (result is Either.Left) state = result.value
-                else toServer((result as Either.Right).value)
-            }
-            /*               review(
-                           e.username,
-                           e.password,
-                           e.rememberMeFor30Days
-                       )*/
+            // ToDo Check that we don't use e content but use state!!!!
+            is OnLogin -> state()
+                .toCredentials{ _snackbarText.value = it }
+                .fold({ state = it as SignInState.Main }, ::toServer)
 
-            SignInEvent.OnLicense -> state = SignInState.License
+            OnLicense -> state = SignInState.License
 
-            SignInEvent.OnForgotPassword -> state = SignInState.ForgotPassword()
+            OnForgotPassword -> state = SignInState.ForgotPassword()
 
             //License
-            SignInEvent.OnLicenseAccept -> state =
+            OnLicenseAccept -> state =
                 SignInState.Main() //ToDo with license we loose all data like login...
             //ToDo maybe we have to remember date and time when License was accepted?
 
             //Final transit to PoleDroid
-            is SignInEvent.OnSuccess -> {
+            is OnSuccess -> {
                 viewModelScope.launch { //ToDo Костыль!!! TrialMode
                     val userId = prefsRepo.userTokens()!!.userId
                     if (userId == TrialMode.id()) {
@@ -158,7 +154,7 @@ class SignInViewModel(
                         userTokens = res.data,
                         rememberUserTill = rememberUserTill
                     )
-                    onEvent(SignInEvent.OnSuccess)
+                    onEvent(OnSuccess)
                 } else {
                     _stateFlow.update {
                         SignInState.Main(

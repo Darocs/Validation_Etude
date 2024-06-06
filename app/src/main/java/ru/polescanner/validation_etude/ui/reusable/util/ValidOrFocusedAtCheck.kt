@@ -60,15 +60,14 @@ fun <C: Any> atMostOneFocused(instance: C): Boolean {
 
 //https://stackoverflow.com/questions/43822920/kotlin-check-if-function-requires-instance-parameter
 @Suppress("UNCHECKED_CAST")
-fun <E, D: DomainPrimitive, U: UiState> KProperty0<Focusable<E>>.parseOrPrompt(
+fun <E, D: DomainPrimitive> KProperty0<Focusable<E>>.parseOrPrompt(
     deliver: (UiText) -> Unit,
-    state: U,
     parse: (E) -> Either<ErrorType, D>
-): Either<U, D> = this.get().value.let{parse(it)}
+): Either<UiState, D> = this.get().value.let{parse(it)}
     .mapLeft {
         require(this.instanceParameter != null)
         { "the function receiver type must be a Data class property, declared in the primary constructor"}
-        val s = (this as CallableReference).boundReceiver as U
+        val s = (this as CallableReference).boundReceiver as UiState
         //(this. instanceParameter!!.type as KClass<*>).pro
         s.toFocusAtView(this){ deliver(it.toMessage()) } /*as U*/ }
 
