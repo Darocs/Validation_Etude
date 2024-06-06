@@ -10,6 +10,7 @@ import ru.polescanner.validation_etude.domain.general.BooleanValidationError
 import ru.polescanner.validation_etude.domain.general.ErrorType
 import ru.polescanner.validation_etude.domain.general.Login
 import ru.polescanner.validation_etude.domain.general.Password
+import ru.polescanner.validation_etude.domain.general.check
 import ru.polescanner.validation_etude.domain.security.Credentials
 import ru.polescanner.validation_etude.ui.reusable.util.UiEvent
 import ru.polescanner.validation_etude.ui.reusable.util.UiState
@@ -33,7 +34,7 @@ sealed interface SignInState: UiState {
             require( atMostOneFocused() ) { "only one view can be focused!" }
         }
 
-        fun Boolean?.check(): Either<ErrorType, Boolean> = this?.right() ?: BooleanValidationError.left()
+
 
         fun toCredentials(inform: (UiText) -> Unit): Either<UiState, Credentials> = either {
             Credentials(

@@ -1,11 +1,15 @@
 package ru.polescanner.validation_etude.domain.general
 
 import arrow.core.Either
+import arrow.core.left
 import arrow.core.raise.either
 import arrow.core.raise.ensure
+import arrow.core.right
 import ru.polescanner.validation_etude.domain.general.Name.ValidationError
 import ru.polescanner.validation_etude.domain.general.Name.ValidationError.*
 
+// ToDo Unfoirtunately not only Domain Primitives are to be validated, but Boolean? as well,
+//  so I refactor parseOrPrompt to <D: Any>
 interface DomainPrimitive
 
 interface ErrorType
@@ -21,7 +25,7 @@ interface Name : DomainPrimitive {
     }
 }
 
-data object BooleanValidationError: ErrorType
+
 
 private fun <V : Name> V.validated(
     minLen: Int = 0,
@@ -67,3 +71,6 @@ value class Password private constructor(override val value: String) : Name {
     }
 }
 
+
+fun Boolean?.check(): Either<ErrorType, Boolean> = this?.right() ?: BooleanValidationError.left()
+data object BooleanValidationError: ErrorType
