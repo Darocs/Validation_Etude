@@ -2,12 +2,7 @@ package ru.polescanner.validation_etude.ui.signin
 
 import androidx.compose.runtime.Immutable
 import arrow.core.Either
-import arrow.core.left
 import arrow.core.raise.either
-import arrow.core.right
-import ru.polescanner.validation_etude.R
-import ru.polescanner.validation_etude.domain.general.BooleanValidationError
-import ru.polescanner.validation_etude.domain.general.ErrorType
 import ru.polescanner.validation_etude.domain.general.Login
 import ru.polescanner.validation_etude.domain.general.Password
 import ru.polescanner.validation_etude.domain.general.check
@@ -18,23 +13,21 @@ import ru.polescanner.validation_etude.ui.reusable.util.UiText
 import ru.polescanner.validation_etude.ui.reusable.util.ValidOrFocusedAtCheck
 import ru.polescanner.validation_etude.ui.reusable.util.atMostOneFocused
 import ru.polescanner.validation_etude.ui.reusable.util.parseOrPrompt
-import ru.polescanner.validation_etude.ui.reusable.util.toFocusable
-import ru.polescanner.validation_etude.ui.reusable.util.toNullableFocusable
+import ru.polescanner.validation_etude.ui.reusable.util.withClearedFocus
+import ru.polescanner.validation_etude.ui.reusable.util.withClearedFocusForNullable
 
 @Immutable
 sealed interface SignInState: UiState {
     data object Loading: SignInState
     data class Main(
-        val login: ValidOrFocusedAtCheck<String> = "".toFocusable(),
-        val password: ValidOrFocusedAtCheck<String> = "".toFocusable(),
-        val isLoggedIn: ValidOrFocusedAtCheck<Boolean?> = null.toNullableFocusable()
+        val login: ValidOrFocusedAtCheck<String> = "".withClearedFocus(),
+        val password: ValidOrFocusedAtCheck<String> = "".withClearedFocus(),
+        val isLoggedIn: ValidOrFocusedAtCheck<Boolean?> = null.withClearedFocusForNullable()
     ): SignInState { //ToDo keepMeLoggedIn isTokenExpired RememberMe etc. - choose the best
 
         init {
             require( atMostOneFocused() ) { "only one view can be focused!" }
         }
-
-
 
         fun toCredentials(inform: (UiText) -> Unit): Either<UiState, Credentials> = either {
             Credentials(

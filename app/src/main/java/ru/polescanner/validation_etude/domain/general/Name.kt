@@ -8,7 +8,7 @@ import arrow.core.right
 import ru.polescanner.validation_etude.domain.general.Name.ValidationError
 import ru.polescanner.validation_etude.domain.general.Name.ValidationError.*
 
-// ToDo Unfoirtunately not only Domain Primitives are to be validated, but Boolean? as well,
+// ToDo Unfortunately not only Domain Primitives are to be validated, but Boolean? as well,
 //  so I refactor parseOrPrompt to <D: Any>
 interface DomainPrimitive
 
@@ -25,7 +25,14 @@ interface Name : DomainPrimitive {
     }
 }
 
+data class ConductorCount(val count: Int) : DomainPrimitive {
+    sealed interface ValidationError : ErrorType {
+        data object Negative : Name.ValidationError
+        data class TooSmall(val min: Int) : ValidationError
 
+
+    }
+}
 
 private fun <V : Name> V.validated(
     minLen: Int = 0,
@@ -44,6 +51,7 @@ fun <E: ErrorType, V> Either<E, V>.orThrow() : V = when (this) {
     is Either.Right -> value
 }
 
+// ToDo Module is compiled how to provide constants in runtime
 @JvmInline
 value class Login private constructor(override val value: String) : Name {
     companion object {
@@ -71,6 +79,7 @@ value class Password private constructor(override val value: String) : Name {
     }
 }
 
-
+fun String.toLogin() = Login(this)
+fun String.toPassword() = Password(this)
 fun Boolean?.check(): Either<ErrorType, Boolean> = this?.right() ?: BooleanValidationError.left()
 data object BooleanValidationError: ErrorType

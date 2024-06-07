@@ -13,8 +13,6 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
-import ru.polescanner.droidmvp.ui.reusable.util.ValidOrFocusedAtCheck
-import ru.polescanner.droidmvp.ui.reusable.util.toFocusable
 import ru.polescanner.droidmvp.ui.reusable.util.validateLogin
 import ru.polescanner.droidmvp.ui.reusable.util.validateName
 import ru.polescanner.droidmvp.ui.reusable.util.validatePassword
@@ -22,7 +20,7 @@ import ru.polescanner.validation_etude.R
 import ru.polescanner.validation_etude.domainext.bus.Result
 import ru.polescanner.validation_etude.ui.reusable.util.Notice
 import ru.polescanner.validation_etude.ui.reusable.util.ValidOrFocusedAtCheck
-import ru.polescanner.validation_etude.ui.reusable.util.toFocusable
+import ru.polescanner.validation_etude.ui.reusable.util.withClearedFocus
 
 @Composable
 fun RegistrationBlock(
@@ -131,11 +129,11 @@ fun ConfirmElement(
 @Preview(showSystemUi = true)
 private fun RegistrationBlockPreview() {
     RegistrationBlock(
-        loginName = "SabNK".toFocusable(),
+        loginName = "SabNK".withClearedFocus(),
         onValidLoginName = {},
-        password = "123456".toFocusable(),
+        password = "123456".withClearedFocus(),
         onPasswordChanged = {},
-        confirm = "".toFocusable(),
+        confirm = "".withClearedFocus(),
         confirmValidator = { it.validateName() },
         onConfirmChanged = {},
     )

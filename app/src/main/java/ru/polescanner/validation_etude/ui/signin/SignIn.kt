@@ -24,7 +24,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import ru.polescanner.core.general.User
 import ru.polescanner.droidmvp.ui.reusable.components.LoadingScreen
-import ru.polescanner.droidmvp.ui.reusable.util.ValidOrFocusedAtCheck
 import ru.polescanner.droidmvp.ui.reusable.util.toFocusable
 import ru.polescanner.validation_etude.R
 import ru.polescanner.validation_etude.ui.reusable.components.CheckBoxWithText
@@ -71,10 +70,10 @@ fun SignInScreen(
 
     SignInScreen(
         login = uiState.login,
-        onLoginNameChanged = { onEvent(SignInEvent.OnLoginChanged(it)) },
+        onLoginChanged = { onEvent(SignInEvent.OnLoginChanged(it)) },
         password = uiState.password,
         onPasswordChanged = { onEvent(SignInEvent.OnPasswordChanged(it)) },
-        keepMeLoggedIn = uiState.isLoggedIn,
+        rememberMe = uiState.isLoggedIn,
         keepMeLoggedInChanged = {
             onEvent(
                 SignInEvent.OnRememberMeFor30DaysChanged(
@@ -102,10 +101,10 @@ fun SignInScreen(
 @Composable
 fun SignInScreen(
     login: ValidOrFocusedAtCheck<String>,
-    onLoginNameChanged: (String) -> Unit,
+    onLoginChanged: (String) -> Unit,
     password: ValidOrFocusedAtCheck<String>,
     onPasswordChanged: (String) -> Unit,
-    keepMeLoggedIn: Boolean,
+    rememberMe: Boolean,
     keepMeLoggedInChanged: (Boolean) -> Unit,
     onLogin: () -> Unit,
     onSignUp: () -> Unit,
@@ -120,7 +119,7 @@ fun SignInScreen(
     ) {
         LoginElement(
             login = login.value,
-            onValid = { onLoginNameChanged(it) },
+            onValid = { onLoginChanged(it) },
             isFocused = login.isFocused
         )
         Spacer(Modifier.height(10.dp))
@@ -132,16 +131,16 @@ fun SignInScreen(
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.toggleable(
-                value = keepMeLoggedIn,
+                value = rememberMe,
                 onValueChange = keepMeLoggedInChanged,
                 role = Role.Checkbox
             )
         ) {
             CheckBoxWithText(
                 label = UiText.Res(R.string.remember_me).asString(),
-                uiState = keepMeLoggedIn
+                uiState = rememberMe
             ) {
-                keepMeLoggedInChanged(onIndeterminateClick(keepMeLoggedIn))
+                keepMeLoggedInChanged(onIndeterminateClick(rememberMe))
             }
         }
         Spacer(modifier = Modifier.height(10.dp))
@@ -189,10 +188,10 @@ fun SignInPreview2() {
 fun SignInPreview() {
     SignInScreen(
         login = "".toFocusable(),
-        onLoginNameChanged = {},
+        onLoginChanged = {},
         password = "".toFocusable(),
         onPasswordChanged = {},
-        keepMeLoggedIn = false,
+        rememberMe = false,
         keepMeLoggedInChanged = {},
         onLogin = {},
         onSignUp = {},

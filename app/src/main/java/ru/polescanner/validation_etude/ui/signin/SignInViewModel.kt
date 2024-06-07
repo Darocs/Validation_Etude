@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
-import arrow.core.Either
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import io.ktor.client.call.body
 import io.ktor.client.request.get
@@ -27,8 +26,8 @@ import ru.polescanner.validation_etude.domain.security.Credentials
 import ru.polescanner.validation_etude.ui.reusable.util.AbstractViewModel
 import ru.polescanner.validation_etude.ui.reusable.util.UiText
 import ru.polescanner.validation_etude.ui.reusable.util.clearFocus
-import ru.polescanner.validation_etude.ui.reusable.util.toFocusable
-import ru.polescanner.validation_etude.ui.reusable.util.toNullableFocusable
+import ru.polescanner.validation_etude.ui.reusable.util.withClearedFocus
+import ru.polescanner.validation_etude.ui.reusable.util.withClearedFocusForNullable
 import ru.polescanner.validation_etude.ui.signin.SignInEvent.*
 import java.time.Instant
 import java.time.temporal.ChronoUnit
@@ -80,22 +79,23 @@ class SignInViewModel(
     }
     private fun toServer(c: Credentials): Unit = TODO()
 
-    private fun state() = state as SignInState.Main
+
+    private fun state() = state as SignInState.Main // ToDo Consider to move to AbstractVM
     override fun onEvent(e: SignInEvent) {
         when (e) { //MainScreen editing
             is OnLoginChanged -> state =
-                state().clearFocus().copy(login = e.login.toFocusable())
+                state().clearFocus().copy(login = e.login.withClearedFocus())
 
             is OnPasswordChanged -> state =
-                state().clearFocus().copy(password = e.password.toFocusable())
+                state().clearFocus().copy(password = e.password.withClearedFocus())
 
             is OnRememberMeFor30DaysChanged -> state =
-                state().clearFocus().copy(isLoggedIn = e.remember.toNullableFocusable())
+                state().clearFocus().copy(isLoggedIn = e.remember.withClearedFocusForNullable())
 
             //MainScreen actions click
             // ToDo Check that we don't use e content but use state!!!!
             is OnLogin -> state()
-                .toCredentials{ _snackbarText.value = it }
+                .toCredentials{ inform(it) }
                 .fold({ state = it as SignInState.Main }, ::toServer)
 
             OnLicense -> state = SignInState.License
@@ -160,8 +160,8 @@ class SignInViewModel(
                 } else {
                     _stateFlow.update {
                         SignInState.Main(
-                            login.toFocusable(),
-                            password.toFocusable(),
+                            login.withClearedFocus(),
+                            password.withClearedFocus(),
                             rememberMeFor30Days
                         )
                     }

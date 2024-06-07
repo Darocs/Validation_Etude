@@ -29,5 +29,8 @@ abstract class AbstractViewModel <S: UiState, E: UiEvent>: ViewModel() {
     fun error() {
         _snackbarText.value = UiText.Res(R.string.smth_get_wrong)
     }
+    protected fun inform(message: UiText) {
+        _snackbarText.value = message
+    }
 }
 
