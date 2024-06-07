@@ -6,7 +6,10 @@ import arrow.core.raise.either
 import arrow.core.raise.ensure
 import arrow.core.right
 import ru.polescanner.validation_etude.domain.general.Name.ValidationError
-import ru.polescanner.validation_etude.domain.general.Name.ValidationError.*
+import ru.polescanner.validation_etude.domain.general.Name.ValidationError.ExceedMaxChar
+import ru.polescanner.validation_etude.domain.general.Name.ValidationError.NotTrimmed
+import ru.polescanner.validation_etude.domain.general.Name.ValidationError.ShortMinChar
+import ru.polescanner.validation_etude.domain.general.Name.ValidationError.ViolationAllowedChars
 
 // ToDo Unfortunately not only Domain Primitives are to be validated, but Boolean? as well,
 //  so I refactor parseOrPrompt to <D: Any>

@@ -1,6 +1,7 @@
 package ru.polescanner.validation_etude.ui.reusable.util
 
 import ru.polescanner.validation_etude.R
+import ru.polescanner.validation_etude.domain.general.ConductorCount
 import ru.polescanner.validation_etude.domain.general.ErrorType
 import ru.polescanner.validation_etude.domain.general.Name
 import ru.polescanner.validation_etude.domain.general.Name.ValidationError.ExceedMaxChar
@@ -36,6 +37,7 @@ fun Name.ValidationError.toMessage(): UiText =
         ) // TODO: Add res
 
         is ViolationAllowedChars -> TODO()
+        ConductorCount.ValidationError.Negative -> TODO()
     }
 
 fun ErrorType.toMessage(): UiText = when(this) {
