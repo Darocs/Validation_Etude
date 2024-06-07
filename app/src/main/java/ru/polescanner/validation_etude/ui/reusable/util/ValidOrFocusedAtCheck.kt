@@ -4,14 +4,19 @@ import arrow.core.Either
 import ru.polescanner.validation_etude.domain.general.ErrorType
 import ru.polescanner.validation_etude.ui.reusable.kotlinapi.constructorProperties
 import ru.polescanner.validation_etude.ui.reusable.kotlinapi.copyDataObject
+import ru.polescanner.validation_etude.ui.reusable.kotlinapi.preparePropertiesOfType
 import ru.polescanner.validation_etude.ui.reusable.kotlinapi.readInstanceProperty
 import kotlin.jvm.internal.CallableReference
 import kotlin.reflect.KProperty0
+import kotlin.reflect.KType
 import kotlin.reflect.full.createType
 import kotlin.reflect.full.instanceParameter
 import kotlin.reflect.full.isSubtypeOf
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.full.primaryConstructor
+import kotlin.reflect.full.starProjectedType
+
+// ToDo split code to Reflection and normal code. My idea that this class can't depend on kotlin.reflect
 
 
 typealias Focusable<E> = ValidOrFocusedAtCheck<E>
@@ -61,7 +66,6 @@ fun <U: UiState> U.atMostOneFocused(): Boolean {
 }
 
 //https://stackoverflow.com/questions/43822920/kotlin-check-if-function-requires-instance-parameter
-@Suppress("UNCHECKED_CAST")
 fun <E, D: Any> KProperty0<Focusable<E>>.parseOrPrompt(
     deliver: (UiText) -> Unit,
     parse: (E) -> Either<ErrorType, D>
@@ -92,5 +96,12 @@ fun <U: UiState> U.clearFocus(): U {
     val propertiesWithNewValues = properties.map{ it to
         it::class.members.first{ it.name == "clearFocus" }.call() }.toTypedArray()
     return this.copyDataObject(*propertiesWithNewValues)
+}
+
+fun <U: UiState> U.clearFocus1(): U {
+    val properties = this.preparePropertiesOfType(
+        ValidOrFocusedAtCheck::class,
+        "clearFocus")
+    return this.copyDataObject(*properties)
 }
 

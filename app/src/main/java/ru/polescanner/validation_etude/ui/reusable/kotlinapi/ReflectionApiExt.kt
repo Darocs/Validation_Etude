@@ -1,12 +1,18 @@
 package ru.polescanner.validation_etude.ui.reusable.kotlinapi
 
+import ru.polescanner.validation_etude.ui.reusable.util.ValidOrFocusedAtCheck
+import ru.polescanner.validation_etude.ui.reusable.util.clearFocus
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 import kotlin.reflect.KProperty1
+import kotlin.reflect.KType
+import kotlin.reflect.full.createType
 import kotlin.reflect.full.declaredMemberProperties
 import kotlin.reflect.full.instanceParameter
+import kotlin.reflect.full.isSubtypeOf
 import kotlin.reflect.full.memberFunctions
 import kotlin.reflect.full.primaryConstructor
+import kotlin.reflect.full.starProjectedType
 
 /**
  * A function to read a property from an instance of a class given the property name
@@ -79,3 +85,17 @@ val <T : Any> KClass<T>.constructorProperties
                 }
             }
         } ?: emptyList()
+
+fun <E: Any, V: Any> E.preparePropertiesOfType(
+    clazz: KClass<V>,
+    transformName: String
+): Array<Pair<KProperty1<out E, *>, Any?>> {
+    val dataClass = this::class
+    require(dataClass.isData) { "Type of object to clear focus must be a data class" }
+    val properties = dataClass.constructorProperties
+        .filter { it.returnType.isSubtypeOf(clazz.starProjectedType) }
+    val propertiesWithNewValues = properties.map{ it to
+            it::class.memberFunctions.first{ it.name == transformName }
+                .call(it.instanceParameter) }.toTypedArray()
+    return propertiesWithNewValues
+}
