@@ -15,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
@@ -22,29 +23,28 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import ru.polescanner.core.general.User
-import ru.polescanner.droidmvp.ui.reusable.components.LoadingScreen
-import ru.polescanner.droidmvp.ui.reusable.util.toFocusable
 import ru.polescanner.validation_etude.R
 import ru.polescanner.validation_etude.ui.reusable.components.CheckBoxWithText
+import ru.polescanner.validation_etude.ui.reusable.components.LoadingScreen
 import ru.polescanner.validation_etude.ui.reusable.components.LoginElement
 import ru.polescanner.validation_etude.ui.reusable.components.PasswordElement
 import ru.polescanner.validation_etude.ui.reusable.components.onIndeterminateClick
 import ru.polescanner.validation_etude.ui.reusable.util.UiText
 import ru.polescanner.validation_etude.ui.reusable.util.ValidOrFocusedAtCheck
+import ru.polescanner.validation_etude.ui.reusable.util.makeToast
+import ru.polescanner.validation_etude.ui.reusable.util.withClearedFocus
 
 @Composable
 fun SignInRoute(userId: String?,
                 isLoggedIn: Boolean,
-                onSuccess: (User) -> Unit, //Success is passed here
                 modifier: Modifier = Modifier) {
-    val viewmodel: SignInViewModel = viewModel(factory = SignInViewModel.Factory(
-        navigator = navigator,
-        userId = userId,
-        isLoggedIn = isLoggedIn,
-        onSuccess = onSuccess
+    val viewmodel: SignInViewModel = viewModel(
+        factory = SignInViewModel.Factory(
+            userId = userId,
+            isLoggedIn = isLoggedIn
+        )
     )
-    )
+
     val uiState by viewmodel.stateFlow.collectAsStateWithLifecycle()
 
     when (uiState) {
@@ -73,11 +73,11 @@ fun SignInScreen(
         onLoginChanged = { onEvent(SignInEvent.OnLoginChanged(it)) },
         password = uiState.password,
         onPasswordChanged = { onEvent(SignInEvent.OnPasswordChanged(it)) },
-        rememberMe = uiState.isLoggedIn,
+        rememberMe = uiState.rememberMe.value,
         keepMeLoggedInChanged = {
             onEvent(
                 SignInEvent.OnRememberMeFor30DaysChanged(
-                    remember = !uiState.isLoggedIn
+                    remember = !uiState.rememberMe.value
                 )
             )
         },
@@ -87,13 +87,10 @@ fun SignInScreen(
                 SignInEvent.OnLogin(
                     uiState.login.value,
                     uiState.password.value,
-                    uiState.isLoggedIn
+                    uiState.rememberMe.value
                 )
             )
         },
-        onSignUp = { onEvent(SignInEvent.OnSignUp) },
-        onForgotPassword = { onEvent(SignInEvent.OnForgotPassword) },
-        onLicense = { onEvent(SignInEvent.OnLicense) },
         modifier = modifier,
     )
 }
@@ -107,11 +104,10 @@ fun SignInScreen(
     rememberMe: Boolean,
     keepMeLoggedInChanged: (Boolean) -> Unit,
     onLogin: () -> Unit,
-    onSignUp: () -> Unit,
-    onForgotPassword: () -> Unit,
-    onLicense: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
+
     Column(
         modifier = modifier.padding(vertical = 120.dp),
         verticalArrangement = Arrangement.Center,
@@ -151,7 +147,7 @@ fun SignInScreen(
             Button(onClick = onLogin) {
                 Text(UiText.Res(R.string.submit).asString())
             }
-            Button(onClick = onSignUp) {
+            Button(onClick = { makeToast(context, "SignUp") } ) {
                 Text(UiText.Res(R.string.sign_up).asString())
             }
         }
@@ -162,12 +158,12 @@ fun SignInScreen(
                 .padding(
                     vertical = 6.dp
                 )
-                .clickable(onClick = onForgotPassword)
+                .clickable(onClick = { makeToast(context, "Forgot password") })
         )
         Text(text = UiText.Res(R.string.license).asString(),
              fontSize = 16.sp,
              modifier = Modifier
-                 .clickable { onLicense() }
+                 .clickable { makeToast(context, "License") }
                  .padding(
                      vertical = 6.dp
                  )
@@ -187,16 +183,13 @@ fun SignInPreview2() {
 @Composable
 fun SignInPreview() {
     SignInScreen(
-        login = "".toFocusable(),
+        login = "".withClearedFocus(),
         onLoginChanged = {},
-        password = "".toFocusable(),
+        password = "".withClearedFocus(),
         onPasswordChanged = {},
         rememberMe = false,
         keepMeLoggedInChanged = {},
         onLogin = {},
-        onSignUp = {},
-        onForgotPassword = {},
-        onLicense = {},
         modifier = Modifier
     )
 }
