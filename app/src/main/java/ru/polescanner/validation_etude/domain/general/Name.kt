@@ -67,8 +67,6 @@ value class Login private constructor(override val value: String) : Name {
     }
 }
 
-val l = Login("A").orThrow()
-
 @JvmInline
 value class Password private constructor(override val value: String) : Name {
     companion object {
