@@ -99,3 +99,14 @@ fun <E: Any, V: Any> E.preparePropertiesOfType(
                 .call(it.instanceParameter) }.toTypedArray()
     return propertiesWithNewValues
 }
+
+/*
+fun <C: Any> C.propertiesWithValue(): Map<KProperty1<C, *>, Any?> {
+    val dataClass = this::class
+    require(dataClass.isData) { "It is working only for data class" }
+    val result = buildMap<KProperty1<C,*>, Any?> {
+        dataClass.constructorProperties.map{
+            it to it.get(it.instanceParameter)
+        }
+    }
+}*/

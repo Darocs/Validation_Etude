@@ -7,11 +7,14 @@ import ru.polescanner.validation_etude.ui.reusable.kotlinapi.copyDataObject
 import ru.polescanner.validation_etude.ui.reusable.kotlinapi.preparePropertiesOfType
 import ru.polescanner.validation_etude.ui.reusable.kotlinapi.readInstanceProperty
 import kotlin.jvm.internal.CallableReference
+import kotlin.reflect.KClass
 import kotlin.reflect.KProperty0
+import kotlin.reflect.KProperty1
 import kotlin.reflect.KType
 import kotlin.reflect.full.createType
 import kotlin.reflect.full.instanceParameter
 import kotlin.reflect.full.isSubtypeOf
+import kotlin.reflect.full.memberFunctions
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.full.primaryConstructor
 import kotlin.reflect.full.starProjectedType
@@ -91,12 +94,20 @@ private fun <E, U: UiState> U.toFocusAtView(
 fun <U: UiState> U.clearFocus(): U {
     val dataClass = this::class
     require(dataClass.isData) { "Type of object to clear focus must be a data class" }
-    val properties = dataClass.constructorProperties
-        .filter { it.returnType.isSubtypeOf(ValidOrFocusedAtCheck::class.createType()) }
-    val propertiesWithNewValues = properties.map{ it to
-        it::class.members.first{ it.name == "clearFocus" }.call() }.toTypedArray()
+    val properties = dataClass.memberProperties
+        .filter { it.returnType.classifier == ValidOrFocusedAtCheck::class.starProjectedType }
+    val propertiesWithNewValues = properties.map{
+        @Suppress("UNCHECKED_CAST")
+        it to {
+            val funClearFocus = (it.returnType.classifier as KClass<ValidOrFocusedAtCheck<*>>)
+                .memberFunctions.first { it.name == "clearFocus" }
+            funClearFocus.call((it.instanceParameter))
+        }
+    }.toTypedArray()
     return this.copyDataObject(*propertiesWithNewValues)
 }
+
+fun <T, V> getValue(prop: KProperty1<T, V>, instance: T): V = prop.get(instance)
 
 fun <U: UiState> U.clearFocus1(): U {
     val properties = this.preparePropertiesOfType(
@@ -105,3 +116,8 @@ fun <U: UiState> U.clearFocus1(): U {
     return this.copyDataObject(*properties)
 }
 
+inline fun <reified T: Any> T.printProperties() {
+    T::class.memberProperties.forEach { property ->
+        println("${property.name} = ${property.get(this)}") // You can't use `this.property` here
+    }
+}
