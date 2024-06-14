@@ -14,9 +14,10 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import ru.polescanner.validation_etude.R
-import ru.polescanner.validation_etude.domain.general.Login
-import ru.polescanner.validation_etude.domain.general.Password
+import ru.polescanner.validation_etude.domain.general.toLogin
+import ru.polescanner.validation_etude.ui.reusable.util.UiText
 import ru.polescanner.validation_etude.ui.reusable.util.ValidOrFocusedAtCheck
+import ru.polescanner.validation_etude.ui.reusable.util.toMessage
 import ru.polescanner.validation_etude.ui.reusable.util.withClearedFocus
 
 @Composable
@@ -25,11 +26,12 @@ fun RegistrationBlock(
     onValidLoginName: (String) -> Unit,
     password: ValidOrFocusedAtCheck<String>,
     onPasswordChanged: (String) -> Unit,
+    start: Boolean,
 ) {
     Column {
         LoginElement(
             login = loginName.value,
-            onValid = onValidLoginName,
+            onValueChange = onValidLoginName,
             isFocused = loginName.isFocused
         )
         PasswordElement(
@@ -43,24 +45,25 @@ fun RegistrationBlock(
 @Composable
 fun LoginElement(
     login: String,
-    onValid: (String) -> Unit,
+    onValueChange: (String) -> Unit,
     isFocused: Boolean = false,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
-    var isError by remember { mutableStateOf(false) }
-
-    ValidatedOutlinedTextField(
-        text = login,
-        onValid = onValid,
-        parse = { Login(it) },
-        isError = isError,
-        setError = { isError = it },
-        labelRes = R.string.login,
-        placeholderRes = R.string.enter_login,
-        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
-        isFocused = isFocused,
-        modifier = modifier
-    )
+    login.toLogin().let {
+        val isError = it.isLeft() && login.isNotBlank()
+        val supportingText = if (isError) it.leftOrNull()!!.toMessage() else UiText.Res(R.string.login)
+        ValidatedOutlinedTextField(
+            text = login,
+            onValueChange = onValueChange,
+            isError = isError,
+            label = UiText.Res(R.string.login),
+            placeholder = UiText.Res(R.string.enter_login),
+            supportingText = supportingText,
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+            isFocused = isFocused,
+            modifier = modifier
+        )
+    }
 }
 
 @Composable
@@ -73,12 +76,10 @@ fun PasswordElement(
     var isError by remember { mutableStateOf(false) }
     ValidatedOutlinedTextField(
         text = password,
-        onValid = onValid,
-        parse = { Password(it) },
+        onValueChange = onValid,
         isError = isError,
-        setError = { isError = it },
-        labelRes = R.string.password,
-        placeholderRes = R.string.enter_password,
+        label = UiText.Res(R.string.password),
+        placeholder = UiText.Res(R.string.enter_password),
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password,
                                           imeAction = ImeAction.Next),
         visualTransformation = PasswordVisualTransformation(),
@@ -95,6 +96,7 @@ private fun RegistrationBlockPreview() {
         loginName = "SabNK".withClearedFocus(),
         onValidLoginName = {},
         password = "123456".withClearedFocus(),
-        onPasswordChanged = {}
+        onPasswordChanged = {},
+        start = false
     )
 }

@@ -10,13 +10,15 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.material3.Button
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -47,6 +49,14 @@ fun SignInRoute(userId: String?,
 
     val uiState by viewmodel.stateFlow.collectAsStateWithLifecycle()
 
+    val snackbarHostState = remember { SnackbarHostState() }
+    val snackbarNotice by viewmodel.snackbarText.collectAsStateWithLifecycle()
+    val snackbarText = snackbarNotice.asString()
+
+    LaunchedEffect(snackbarNotice, snackbarText) {
+        if (snackbarText.isNotBlank()) snackbarHostState.showSnackbar(snackbarText)
+    }
+
     when (uiState) {
         SignInState.Loading -> LoadingScreen(UiText.Str("SignIn Screen"))
         is SignInState.Main ->
@@ -66,8 +76,6 @@ fun SignInScreen(
     onEvent: (SignInEvent) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val focusManager = LocalFocusManager.current
-
     SignInScreen(
         login = uiState.login,
         onLoginChanged = { onEvent(SignInEvent.OnLoginChanged(it)) },
@@ -82,9 +90,8 @@ fun SignInScreen(
             )
         },
         onLogin = {
-            focusManager.clearFocus()
             onEvent(
-                SignInEvent.OnLogin(
+                SignInEvent.OnSubmit(
                     uiState.login.value,
                     uiState.password.value,
                     uiState.rememberMe.value
@@ -115,8 +122,8 @@ fun SignInScreen(
     ) {
         LoginElement(
             login = login.value,
-            onValid = { onLoginChanged(it) },
-            isFocused = login.isFocused
+            onValueChange = { onLoginChanged(it) },
+            isFocused = login.isFocused,
         )
         Spacer(Modifier.height(10.dp))
         PasswordElement(

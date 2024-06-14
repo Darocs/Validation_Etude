@@ -21,7 +21,7 @@ sealed interface SignInState: UiState {
     data class Main(
         val login: ValidOrFocusedAtCheck<String> = "".withClearedFocus(),
         val password: ValidOrFocusedAtCheck<String> = "".withClearedFocus(),
-        val rememberMe: ValidOrFocusedAtCheck<Boolean> = false.withClearedFocus()
+        val rememberMe: ValidOrFocusedAtCheck<Boolean> = false.withClearedFocus(),
     ): SignInState { //ToDo keepMeLoggedIn isTokenExpired RememberMe etc. - choose the best
 
         init {
@@ -47,7 +47,7 @@ sealed interface SignInEvent: UiEvent {
     data class OnRememberMeFor30DaysChanged(val remember: Boolean): SignInEvent
 
     //MainScreen actions clicks
-    data class OnLogin(
+    data class OnSubmit(
         val username: String,
         val password: String,
         val rememberMeFor30Days: Boolean

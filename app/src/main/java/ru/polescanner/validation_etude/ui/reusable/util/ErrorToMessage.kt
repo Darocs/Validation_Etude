@@ -1,14 +1,14 @@
 package ru.polescanner.validation_etude.ui.reusable.util
 
 import ru.polescanner.validation_etude.R
-import ru.polescanner.validation_etude.domain.general.ErrorType
 import ru.polescanner.validation_etude.domain.general.Name
 import ru.polescanner.validation_etude.domain.general.Name.ValidationError.ExceedMaxChar
 import ru.polescanner.validation_etude.domain.general.Name.ValidationError.NotTrimmed
 import ru.polescanner.validation_etude.domain.general.Name.ValidationError.ShortMinChar
 import ru.polescanner.validation_etude.domain.general.Name.ValidationError.ViolationAllowedChars
+import ru.polescanner.validation_etude.domain.general.VOVErr
 
-fun <E : ErrorType> E.errorToMessage(): UiText =
+fun <E : VOVErr> E.errorToMessage(): UiText =
     when (this) {
         NotTrimmed -> UiText.Res(R.string.not_trimmed)
 
@@ -42,7 +42,7 @@ fun Name.ValidationError.toMessage(): UiText =
         else -> UiText.Res(R.string.smth_get_wrong)
     }
 
-fun ErrorType.toMessage(): UiText = when(this) {
+fun VOVErr.toMessage(): UiText = when(this) {
     is Name.ValidationError -> this.toMessage()
 
     else -> TODO()

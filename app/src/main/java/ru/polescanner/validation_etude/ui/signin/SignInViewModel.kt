@@ -10,15 +10,14 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import ru.polescanner.validation_etude.domain.security.Credentials
 import ru.polescanner.validation_etude.ui.reusable.util.AbstractViewModel
 import ru.polescanner.validation_etude.ui.reusable.util.UiText
 import ru.polescanner.validation_etude.ui.reusable.util.clearFocus
 import ru.polescanner.validation_etude.ui.reusable.util.withClearedFocus
-import ru.polescanner.validation_etude.ui.signin.SignInEvent.OnLogin
 import ru.polescanner.validation_etude.ui.signin.SignInEvent.OnLoginChanged
 import ru.polescanner.validation_etude.ui.signin.SignInEvent.OnPasswordChanged
 import ru.polescanner.validation_etude.ui.signin.SignInEvent.OnRememberMeFor30DaysChanged
+import ru.polescanner.validation_etude.ui.signin.SignInEvent.OnSubmit
 
 class SignInViewModel(
     var userId: String?,
@@ -49,26 +48,27 @@ class SignInViewModel(
         }
     }
 
-    private fun toServer(c: Credentials): Unit = inform(UiText.Str("Success sing in: ${c.login}, ${c.password}, ${c.rememberMe}"))
-
-
     private fun state() = state as SignInState.Main // ToDo Consider to move to AbstractVM
     override fun onEvent(e: SignInEvent) {
         when (e) { //MainScreen editing
-            is OnLoginChanged -> state =
-                state().clearFocus().copy(login = e.login.withClearedFocus())
+            is OnLoginChanged -> state = state().clearFocus().copy(login = e.login.withClearedFocus())
 
             is OnPasswordChanged -> state =
-                state().clearFocus().copy(password = e.password.withClearedFocus())
+                state().clearFocus()/*.copy(password = e.password.withClearedFocus())*/
 
             is OnRememberMeFor30DaysChanged -> state =
-                state().clearFocus().copy(rememberMe = e.remember.withClearedFocus())
+                state().clearFocus()/*.copy(rememberMe = e.remember.withClearedFocus())*/
 
             //MainScreen actions click
             // ToDo Check that we don't use e content but use state!!!!
-            is OnLogin -> state()
+            is OnSubmit -> state()
                 .toCredentials { inform(it) }
-                .fold({ state = it as SignInState.Main }, ::toServer)
+                .fold(
+                    ifLeft = { state = it as SignInState.Main },
+                    ifRight = { _snackbarText.value =
+                        UiText.Str("Success sing in: ${it.login}, ${it.password}, ${it.rememberMe}")
+                    }
+                )
         }
     }
 }

@@ -2,7 +2,7 @@ package ru.polescanner.validation_etude.ui.reusable.util
 
 import android.util.Log
 import arrow.core.Either
-import ru.polescanner.validation_etude.domain.general.ErrorType
+import ru.polescanner.validation_etude.domain.general.VOVErr
 import ru.polescanner.validation_etude.ui.reusable.kotlinapi.copyDataObject
 import ru.polescanner.validation_etude.ui.reusable.kotlinapi.preparePropertiesOfType
 import ru.polescanner.validation_etude.ui.reusable.kotlinapi.readInstanceProperty
@@ -10,8 +10,6 @@ import kotlin.jvm.internal.CallableReference
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty0
 import kotlin.reflect.KProperty1
-import kotlin.reflect.full.createType
-import kotlin.reflect.full.instanceParameter
 import kotlin.reflect.full.memberFunctions
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.full.primaryConstructor
@@ -64,7 +62,7 @@ fun <U: UiState> U.atMostOneFocused(): Boolean {
 //https://stackoverflow.com/questions/43822920/kotlin-check-if-function-requires-instance-parameter
 fun <E, D: Any> KProperty0<Focusable<E>>.parseOrPrompt(
     deliver: (UiText) -> Unit,
-    parse: (E) -> Either<ErrorType, D>
+    parse: (E) -> Either<VOVErr, D>
 ): Either<UiState, D> = this.get().value.let{parse(it)}
     .mapLeft {
         /*Log.d(TAG, "parseOrPrompt: ${this@parseOrPrompt.instanceParameter}")
@@ -72,7 +70,11 @@ fun <E, D: Any> KProperty0<Focusable<E>>.parseOrPrompt(
         { "the function receiver type must be a Data class property, declared in the primary constructor"}*/
         val s = (this as CallableReference).boundReceiver as UiState
         Log.d(TAG, "parseOrPrompt: UiState $s")
-        s.toFocusAtView(this){ deliver(it.toMessage()) } /*as U*/ }
+        val s1 = s.toFocusAtView(this) { deliver(it.toMessage()) }
+        Log.d(TAG, "parseOrPrompt1: UiState $s1")
+        s1
+    /*as U*/
+    }
 
 
 private fun <E, U: UiState> U.toFocusAtView(
