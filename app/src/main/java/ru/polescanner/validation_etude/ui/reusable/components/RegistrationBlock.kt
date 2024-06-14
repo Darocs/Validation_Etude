@@ -4,10 +4,6 @@ import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -15,6 +11,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import ru.polescanner.validation_etude.R
 import ru.polescanner.validation_etude.domain.general.toLogin
+import ru.polescanner.validation_etude.domain.general.toPassword
 import ru.polescanner.validation_etude.ui.reusable.util.UiText
 import ru.polescanner.validation_etude.ui.reusable.util.ValidOrFocusedAtCheck
 import ru.polescanner.validation_etude.ui.reusable.util.toMessage
@@ -73,20 +70,24 @@ fun PasswordElement(
     isFocused: Boolean = false,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
-    var isError by remember { mutableStateOf(false) }
-    ValidatedOutlinedTextField(
-        text = password,
-        onValueChange = onValid,
-        isError = isError,
-        label = UiText.Res(R.string.password),
-        placeholder = UiText.Res(R.string.enter_password),
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password,
-                                          imeAction = ImeAction.Next),
-        visualTransformation = PasswordVisualTransformation(),
-        hideText = true,
-        isFocused = isFocused,
-        modifier = modifier
-    )
+    password.toPassword().let {
+        val isError = it.isLeft() && password.isNotBlank()
+        val supportingText = if (isError) it.leftOrNull()!!.toMessage() else UiText.Res(R.string.password)
+        ValidatedOutlinedTextField(
+            text = password,
+            onValueChange = onValid,
+            isError = isError,
+            label = UiText.Res(R.string.password),
+            placeholder = UiText.Res(R.string.enter_password),
+            supportingText = supportingText,
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password,
+                imeAction = ImeAction.Next),
+            visualTransformation = PasswordVisualTransformation(),
+            hideText = true,
+            isFocused = isFocused,
+            modifier = modifier
+        )
+    }
 }
 
 @Composable

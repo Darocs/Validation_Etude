@@ -54,10 +54,10 @@ class SignInViewModel(
             is OnLoginChanged -> state = state().clearFocus().copy(login = e.login.withClearedFocus())
 
             is OnPasswordChanged -> state =
-                state().clearFocus()/*.copy(password = e.password.withClearedFocus())*/
+                state().clearFocus().copy(password = e.password.withClearedFocus())
 
             is OnRememberMeFor30DaysChanged -> state =
-                state().clearFocus()/*.copy(rememberMe = e.remember.withClearedFocus())*/
+                state().clearFocus().copy(rememberMe = e.remember.withClearedFocus())
 
             //MainScreen actions click
             // ToDo Check that we don't use e content but use state!!!!

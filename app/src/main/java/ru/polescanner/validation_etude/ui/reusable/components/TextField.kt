@@ -153,7 +153,7 @@ fun ValidatedOutlinedTextField(
                     modifier = Modifier.fillMaxWidth(),
                     text = supportingText.asString(),
                     style = MaterialTheme.typography.labelSmall,
-                    color = if (isError) colorScheme.error else colorScheme.background
+                    color = if (isError) colorScheme.error else colorScheme.onBackground
                 )
             },
             contentPadding = OutlinedTextFieldDefaults.contentPadding(
