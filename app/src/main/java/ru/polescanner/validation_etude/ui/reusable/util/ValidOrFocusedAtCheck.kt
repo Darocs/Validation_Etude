@@ -1,8 +1,8 @@
 package ru.polescanner.validation_etude.ui.reusable.util
 
+import android.util.Log
 import arrow.core.Either
 import ru.polescanner.validation_etude.domain.general.ErrorType
-import ru.polescanner.validation_etude.ui.reusable.kotlinapi.constructorProperties
 import ru.polescanner.validation_etude.ui.reusable.kotlinapi.copyDataObject
 import ru.polescanner.validation_etude.ui.reusable.kotlinapi.preparePropertiesOfType
 import ru.polescanner.validation_etude.ui.reusable.kotlinapi.readInstanceProperty
@@ -10,17 +10,14 @@ import kotlin.jvm.internal.CallableReference
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty0
 import kotlin.reflect.KProperty1
-import kotlin.reflect.KType
 import kotlin.reflect.full.createType
 import kotlin.reflect.full.instanceParameter
-import kotlin.reflect.full.isSubtypeOf
 import kotlin.reflect.full.memberFunctions
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.full.primaryConstructor
-import kotlin.reflect.full.starProjectedType
 
 // ToDo split code to Reflection and normal code. My idea that this class can't depend on kotlin.reflect
-
+private const val TAG = "ValidOrFocusedAtCheck"
 
 typealias Focusable<E> = ValidOrFocusedAtCheck<E>
 
@@ -55,7 +52,9 @@ fun <U: UiState> U.atMostOneFocused(): Boolean {
     val kClass = this::class
     require(kClass.isData) { "only data classes instances are supported" }
     //ToDo filter only Focusable
-    val propertyNames = kClass.primaryConstructor!!.parameters.filter{ it == it }.map { it.name!! }
+    val propertyNames = kClass.memberProperties
+        .filter{ it.returnType.classifier == ValidOrFocusedAtCheck::class }
+        .map { it.name }
     val propertyValues = propertyNames.map { name ->
         when (val type = kClass.memberProperties.find {it.name == name}!!.returnType) {
             ValidOrFocusedAtCheck::class.createType(type.arguments) ->
@@ -74,9 +73,11 @@ fun <E, D: Any> KProperty0<Focusable<E>>.parseOrPrompt(
     parse: (E) -> Either<ErrorType, D>
 ): Either<UiState, D> = this.get().value.let{parse(it)}
     .mapLeft {
-        require(this.instanceParameter != null)
-        { "the function receiver type must be a Data class property, declared in the primary constructor"}
+        /*Log.d(TAG, "parseOrPrompt: ${this@parseOrPrompt.instanceParameter}")
+        require(this@parseOrPrompt.instanceParameter != null)
+        { "the function receiver type must be a Data class property, declared in the primary constructor"}*/
         val s = (this as CallableReference).boundReceiver as UiState
+        Log.d(TAG, "parseOrPrompt: UiState $s")
         s.toFocusAtView(this){ deliver(it.toMessage()) } /*as U*/ }
 
 
@@ -95,14 +96,20 @@ fun <U: UiState> U.clearFocus(): U {
     val dataClass = this::class
     require(dataClass.isData) { "Type of object to clear focus must be a data class" }
     val properties = dataClass.memberProperties
-        .filter { it.returnType.classifier == ValidOrFocusedAtCheck::class.starProjectedType }
-    require(properties.size != 0){" !!!!!!!!!!!!!!!!!!!!! wrong filter " }
+        .filter { it.returnType.classifier == ValidOrFocusedAtCheck::class }
+    require(properties.size > 0){" UiState has no Focused properties " }
+    Log.d(TAG, "properties size:${properties.size} and ${properties[0]}")
     val propertiesWithNewValues = properties.map{
         @Suppress("UNCHECKED_CAST")
-        it to {
+        it to run {
             val funClearFocus = (it.returnType.classifier as KClass<ValidOrFocusedAtCheck<*>>)
                 .memberFunctions.first { it.name == "clearFocus" }
-            funClearFocus.call((it.instanceParameter))
+            Log.d(TAG, "clearFocus before: ${funClearFocus} ")
+            val focusedPropertyValue = it.getter.call(this)
+            Log.d(TAG, "loginValue: ${focusedPropertyValue} ")
+            val focusedPropertyValueWithClearedFocus = funClearFocus.call(focusedPropertyValue)
+            Log.d(TAG, "clearFocus: ${funClearFocus} :: $focusedPropertyValueWithClearedFocus")
+            focusedPropertyValueWithClearedFocus
         }
     }.toTypedArray()
     return this.copyDataObject(*propertiesWithNewValues)
