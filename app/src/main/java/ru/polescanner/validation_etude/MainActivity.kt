@@ -20,7 +20,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             Validation_EtudeTheme {
                 Surface(modifier = Modifier.fillMaxSize()) {
-                    SignInRoute(userId = null, isLoggedIn = false)
+                    SignInRoute()
                 }
             }
         }

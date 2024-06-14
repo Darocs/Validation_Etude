@@ -37,15 +37,8 @@ import ru.polescanner.validation_etude.ui.reusable.util.makeToast
 import ru.polescanner.validation_etude.ui.reusable.util.withClearedFocus
 
 @Composable
-fun SignInRoute(userId: String?,
-                isLoggedIn: Boolean,
-                modifier: Modifier = Modifier) {
-    val viewmodel: SignInViewModel = viewModel(
-        factory = SignInViewModel.Factory(
-            userId = userId,
-            isLoggedIn = isLoggedIn
-        )
-    )
+fun SignInRoute(modifier: Modifier = Modifier) {
+    val viewmodel: SignInViewModel = viewModel()
 
     val uiState by viewmodel.stateFlow.collectAsStateWithLifecycle()
 
@@ -89,15 +82,7 @@ fun SignInScreen(
                 )
             )
         },
-        onLogin = {
-            onEvent(
-                SignInEvent.OnSubmit(
-                    uiState.login.value,
-                    uiState.password.value,
-                    uiState.rememberMe.value
-                )
-            )
-        },
+        onLogin = { onEvent(SignInEvent.OnSubmit) },
         modifier = modifier,
     )
 }

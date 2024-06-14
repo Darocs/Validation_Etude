@@ -47,9 +47,5 @@ sealed interface SignInEvent: UiEvent {
     data class OnRememberMeFor30DaysChanged(val remember: Boolean): SignInEvent
 
     //MainScreen actions clicks
-    data class OnSubmit(
-        val username: String,
-        val password: String,
-        val rememberMeFor30Days: Boolean
-    ): SignInEvent
+    data object OnSubmit: SignInEvent
 }
