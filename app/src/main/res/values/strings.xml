@@ -14,7 +14,9 @@
     <string name="forgot_password">Forgot password</string>
     <string name="license">License</string>
     <string name="smth_get_wrong">Something get wrong</string>
-    <string name="not_enough_chars">Text does not have enough chars</string>
-    <string name="is_too_long">Text is too long</string>
-    <string name="not_allowed_chars">Not allowed chars</string>
+    <string name="not_enough_chars">Min</string>
+    <string name="is_too_long">Max</string>
+    <string name="not_allowed_chars">Allowed chars</string>
+    <string name="chars">chars</string>
+    <string name="not_trimmed">Text is not trimmed</string>
 </resources>
