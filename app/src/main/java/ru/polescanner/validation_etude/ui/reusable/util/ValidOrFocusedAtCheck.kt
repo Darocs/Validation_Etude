@@ -96,6 +96,7 @@ fun <U: UiState> U.clearFocus(): U {
     require(dataClass.isData) { "Type of object to clear focus must be a data class" }
     val properties = dataClass.memberProperties
         .filter { it.returnType.classifier == ValidOrFocusedAtCheck::class.starProjectedType }
+    require(properties.size != 0){" !!!!!!!!!!!!!!!!!!!!! wrong filter " }
     val propertiesWithNewValues = properties.map{
         @Suppress("UNCHECKED_CAST")
         it to {
