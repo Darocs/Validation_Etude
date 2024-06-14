@@ -46,23 +46,17 @@ fun atMostOneFocused(vararg elements: ValidOrFocusedAtCheck<out Any?>): Boolean 
  * requires: kotlin reflection
  *
  * @param [instance] instance of the UiState data class
- * @throws [IllegalArgumentException] if property of other than [ValidOrFocusedAtCheck] type
+ * @throws [IllegalArgumentException] if no properties of [ValidOrFocusedAtCheck] type
  */
 fun <U: UiState> U.atMostOneFocused(): Boolean {
     val kClass = this::class
-    require(kClass.isData) { "only data classes instances are supported" }
-    //ToDo filter only Focusable
+    require(kClass.isData) { "Only data classes instances are supported" }
     val propertyNames = kClass.memberProperties
         .filter{ it.returnType.classifier == ValidOrFocusedAtCheck::class }
         .map { it.name }
-    val propertyValues = propertyNames.map { name ->
-        when (val type = kClass.memberProperties.find {it.name == name}!!.returnType) {
-            ValidOrFocusedAtCheck::class.createType(type.arguments) ->
-                readInstanceProperty<ValidOrFocusedAtCheck<*>>(this, name)
-            else -> throw IllegalArgumentException(
-                "not applicable type of the field. Only ${ValidOrFocusedAtCheck::class.simpleName} supported"
-            )
-        }
+    require(propertyNames.size > 0){ "No Focusable properties in the receiver UiState"}
+    val propertyValues = propertyNames.map {
+        readInstanceProperty<ValidOrFocusedAtCheck<*>>(this, it)
     }
     return propertyValues.count { it.isFocused } <= 1
 }
