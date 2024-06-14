@@ -52,7 +52,7 @@ import ru.polescanner.validation_etude.ui.reusable.util.UiText
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ValidatedOutlinedTextField(
+fun CustomOutlinedTextField(
     text: String,
     onValueChange: (String) -> Unit,
     isError: Boolean = false,
@@ -180,7 +180,7 @@ fun ValidatedOutlinedTextField(
 )
 @Composable
 fun ValidatedOutlinedTextFieldPreview() {
-    ValidatedOutlinedTextField(
+    CustomOutlinedTextField(
         text = "Some text",
         onValueChange = {},
         isError = false,
@@ -196,7 +196,7 @@ fun ValidatedOutlinedTextFieldPreview() {
 )
 @Composable
 fun InvalidWithoutTextPreview() {
-    ValidatedOutlinedTextField(
+    CustomOutlinedTextField(
         text = "",
         onValueChange = {},
         isError = false,
@@ -212,7 +212,7 @@ fun InvalidWithoutTextPreview() {
 )
 @Composable
 fun InvalidShortTextPreviewWith() {
-    ValidatedOutlinedTextField(
+    CustomOutlinedTextField(
         text = "asdsadsadsadsadsaaaaaaaa",
         onValueChange = {},
         isError = true,

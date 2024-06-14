@@ -52,7 +52,7 @@ fun LoginElement(
     login.toLogin().let {
         val isError = it.isLeft() && login.isNotBlank()
         val supportingText = if (isError) it.leftOrNull()!!.toMessage() else UiText.Res(R.string.login)
-        ValidatedOutlinedTextField(
+        CustomOutlinedTextField(
             text = login,
             onValueChange = onValueChange,
             isError = isError,
@@ -74,7 +74,7 @@ fun PasswordElement(
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
     var isError by remember { mutableStateOf(false) }
-    ValidatedOutlinedTextField(
+    CustomOutlinedTextField(
         text = password,
         onValueChange = onValid,
         isError = isError,

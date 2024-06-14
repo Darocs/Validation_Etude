@@ -19,19 +19,7 @@ import ru.polescanner.validation_etude.ui.signin.SignInEvent.OnPasswordChanged
 import ru.polescanner.validation_etude.ui.signin.SignInEvent.OnRememberMeFor30DaysChanged
 import ru.polescanner.validation_etude.ui.signin.SignInEvent.OnSubmit
 
-class SignInViewModel(
-    var userId: String?,
-    var isLoggedIn: Boolean = false
-) : AbstractViewModel<SignInState, SignInEvent>() {
-
-    @Suppress("UNCHECKED_CAST")
-    class Factory(
-        var userId: String? = null,
-        var isLoggedIn: Boolean = false
-    ) : ViewModelProvider.Factory {
-        override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras) : T =
-            SignInViewModel(userId = userId, isLoggedIn = isLoggedIn) as T
-    }
+class SignInViewModel() : AbstractViewModel<SignInState, SignInEvent>() {
 
     override val _stateFlow: MutableStateFlow<SignInState> = MutableStateFlow(SignInState.Loading)
     override val stateFlow: StateFlow<SignInState> = _stateFlow.asStateFlow()

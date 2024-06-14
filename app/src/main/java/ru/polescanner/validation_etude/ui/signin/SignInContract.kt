@@ -22,8 +22,7 @@ sealed interface SignInState: UiState {
         val login: ValidOrFocusedAtCheck<String> = "".withClearedFocus(),
         val password: ValidOrFocusedAtCheck<String> = "".withClearedFocus(),
         val rememberMe: ValidOrFocusedAtCheck<Boolean> = false.withClearedFocus(),
-    ): SignInState { //ToDo keepMeLoggedIn isTokenExpired RememberMe etc. - choose the best
-
+    ): SignInState {
         init {
             require( atMostOneFocused() ) { "only one view can be focused!" }
         }
@@ -36,6 +35,7 @@ sealed interface SignInState: UiState {
             )
         }
     }
+    // ToDo Do we need that class?
     data class Error(val error: UiText): SignInState
 }
 
@@ -47,9 +47,5 @@ sealed interface SignInEvent: UiEvent {
     data class OnRememberMeFor30DaysChanged(val remember: Boolean): SignInEvent
 
     //MainScreen actions clicks
-    data class OnSubmit(
-        val username: String,
-        val password: String,
-        val rememberMeFor30Days: Boolean
-    ): SignInEvent
+    data object OnSubmit: SignInEvent
 }
