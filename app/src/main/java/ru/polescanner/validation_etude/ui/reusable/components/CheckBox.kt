@@ -73,7 +73,7 @@ private fun Boolean?.toToggleableState() =
         else ToggleableState.Off
     } ?: ToggleableState.Indeterminate
 
-fun Boolean?.nextState() =
+private fun Boolean?.nextState() =
     this?.let{ !it } ?: true
 
 @Preview(showBackground = true)
@@ -94,5 +94,4 @@ fun CheckBoxWithTextPreviewFalse() {
     ) {}
 }
 
-fun onIndeterminateClick(value: Boolean?): Boolean =
-    value?.let{ !it }?: true
+fun onIndeterminateClick(value: Boolean?): Boolean = value.nextState()
