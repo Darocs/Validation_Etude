@@ -19,4 +19,5 @@
     <string name="not_allowed_chars">Allowed chars</string>
     <string name="chars">chars</string>
     <string name="not_trimmed">Text is not trimmed</string>
+    <string name="undefined">Make your choice</string>
 </resources>

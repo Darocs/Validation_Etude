@@ -71,7 +71,7 @@ fun SignInScreen(
         password = uiState.password,
         onPasswordChanged = { onEvent(SignInEvent.OnPasswordChanged(it)) },
         rememberMe = uiState.rememberMe,
-        rememberMeChanged = { onEvent(SignInEvent.OnRememberMeChanged(it)) },
+        onRememberMeChanged = { onEvent(SignInEvent.OnRememberMeChanged(it)) },
         onLoginClick = { onEvent(SignInEvent.OnSubmit) }, //ToDo onSubmit doesn't match with onLoginClick
         modifier = modifier,
     )
@@ -84,7 +84,7 @@ fun SignInScreen(
     password: Focusable<String>,
     onPasswordChanged: (String) -> Unit,
     rememberMe: Focusable<Boolean?>,
-    rememberMeChanged: (Boolean) -> Unit,
+    onRememberMeChanged: (Boolean) -> Unit,
     onLoginClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -113,7 +113,7 @@ fun SignInScreen(
                 uiState = rememberMe.value,
                 isFocused = rememberMe.isFocused
             ) {
-                rememberMeChanged(onIndeterminateClick(rememberMe.value))
+                onRememberMeChanged(onIndeterminateClick(rememberMe.value))
             }
         }
         Spacer(modifier = Modifier.height(10.dp))
@@ -145,7 +145,7 @@ fun SignInPreview() {
         password = "".withClearedFocus(),
         onPasswordChanged = {},
         rememberMe = false.withClearedFocusForNullable(),
-        rememberMeChanged = {},
+        onRememberMeChanged = {},
         onLoginClick = {},
         modifier = Modifier
     )
