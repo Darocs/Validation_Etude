@@ -35,6 +35,8 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -42,6 +44,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ru.polescanner.validation_etude.R
+import ru.polescanner.validation_etude.domain.general.Login
 import ru.polescanner.validation_etude.ui.reusable.util.UiText
 
 /**
@@ -52,7 +55,7 @@ import ru.polescanner.validation_etude.ui.reusable.util.UiText
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ValidatedOutlinedTextField(
+fun CustomOutlinedTextField(
     text: String,
     onValueChange: (String) -> Unit,
     isError: Boolean = false,
@@ -91,7 +94,8 @@ fun ValidatedOutlinedTextField(
             .clickable {
                 focusManager.clearFocus()
                 focusRequester.requestFocus()
-            },
+            }
+            .semantics (mergeDescendants = true) {},
         singleLine = singleLine,
         maxLines = maxLines,
         visualTransformation = if (!passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
@@ -121,7 +125,8 @@ fun ValidatedOutlinedTextField(
             placeholder = {
                 Text(
                     text = placeholder.asString(),
-                    style = MaterialTheme.typography.bodySmall.copy(fontSize = 13.sp)
+                    style = MaterialTheme.typography.bodySmall.copy(fontSize = 13.sp),
+                    modifier = Modifier.semantics { contentDescription = "placeholder" },
                 )
             },
             isError = isError,
@@ -130,7 +135,14 @@ fun ValidatedOutlinedTextField(
                     IconButton(onClick = { passwordVisibility = !passwordVisibility }) {
                         Icon(
                             imageVector = if (!passwordVisibility) Icons.Default.Visibility else Icons.Default.VisibilityOff,
+                            /* ToDo to UiText.Res!!!
+                             *  @param contentDescription text used by accessibility services to describe what this icon
+                             *  represents. This should always be provided unless this icon is used for decorative purposes, and
+                             *  does not represent a meaningful action that a user can take. This text should be localized, such
+                             *  as by using [androidx.compose.ui.res.stringResource] or similar
+                             */
                             contentDescription = "visibility"
+
                         )
                     }
                 } else if (isError) {
@@ -180,7 +192,7 @@ fun ValidatedOutlinedTextField(
 )
 @Composable
 fun ValidatedOutlinedTextFieldPreview() {
-    ValidatedOutlinedTextField(
+    CustomOutlinedTextField(
         text = "Some text",
         onValueChange = {},
         isError = false,
@@ -196,7 +208,7 @@ fun ValidatedOutlinedTextFieldPreview() {
 )
 @Composable
 fun InvalidWithoutTextPreview() {
-    ValidatedOutlinedTextField(
+    CustomOutlinedTextField(
         text = "",
         onValueChange = {},
         isError = false,
@@ -212,10 +224,11 @@ fun InvalidWithoutTextPreview() {
 )
 @Composable
 fun InvalidShortTextPreviewWith() {
-    ValidatedOutlinedTextField(
-        text = "asdsadsadsadsadsaaaaaaaa",
+    val text = "asdsadsadsadsadsaaaaaaaa"
+    CustomOutlinedTextField(
+        text = text,
         onValueChange = {},
-        isError = true,
+        isError = Login(text).isLeft(),
         label = UiText.Res(R.string.alias_hint),
         placeholder = UiText.Res(R.string.alias_hint),
         supportingText = UiText.Res(R.string.alias_helper_text)
