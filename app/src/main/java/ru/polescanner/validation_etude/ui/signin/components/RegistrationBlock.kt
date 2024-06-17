@@ -1,4 +1,4 @@
-package ru.polescanner.validation_etude.ui.reusable.components
+package ru.polescanner.validation_etude.ui.signin.components
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.text.KeyboardOptions
@@ -10,6 +10,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import ru.polescanner.validation_etude.R
 import ru.polescanner.validation_etude.domain.general.toLogin
 import ru.polescanner.validation_etude.domain.general.toPassword
+import ru.polescanner.validation_etude.ui.reusable.components.CustomOutlinedTextField
 import ru.polescanner.validation_etude.ui.reusable.util.UiText
 import ru.polescanner.validation_etude.ui.reusable.util.toMessage
 

@@ -16,7 +16,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -24,13 +24,13 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import ru.polescanner.validation_etude.R
 import ru.polescanner.validation_etude.ui.reusable.components.CheckBoxWithText
 import ru.polescanner.validation_etude.ui.reusable.components.LoadingScreen
-import ru.polescanner.validation_etude.ui.reusable.components.LoginElement
-import ru.polescanner.validation_etude.ui.reusable.components.PasswordElement
 import ru.polescanner.validation_etude.ui.reusable.components.onIndeterminateClick
 import ru.polescanner.validation_etude.ui.reusable.util.Focusable
 import ru.polescanner.validation_etude.ui.reusable.util.UiText
 import ru.polescanner.validation_etude.ui.reusable.util.withClearedFocus
 import ru.polescanner.validation_etude.ui.reusable.util.withClearedFocusForNullable
+import ru.polescanner.validation_etude.ui.signin.components.LoginElement
+import ru.polescanner.validation_etude.ui.signin.components.PasswordElement
 
 @Composable
 fun SignInRoute(modifier: Modifier = Modifier) {
@@ -65,6 +65,8 @@ fun SignInScreen(
     onEvent: (SignInEvent) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val focusManager = LocalFocusManager.current
+
     SignInScreen(
         login = uiState.login,
         onLoginChanged = { onEvent(SignInEvent.OnLoginChanged(it)) },
@@ -72,7 +74,10 @@ fun SignInScreen(
         onPasswordChanged = { onEvent(SignInEvent.OnPasswordChanged(it)) },
         rememberMe = uiState.rememberMe,
         onRememberMeChanged = { onEvent(SignInEvent.OnRememberMeChanged(it)) },
-        onLoginClick = { onEvent(SignInEvent.OnSubmit) }, //ToDo onSubmit doesn't match with onLoginClick
+        onSubmitClick = {
+            focusManager.clearFocus()
+            onEvent(SignInEvent.OnSubmit)
+        },
         modifier = modifier,
     )
 }
@@ -85,11 +90,9 @@ fun SignInScreen(
     onPasswordChanged: (String) -> Unit,
     rememberMe: Focusable<Boolean?>,
     onRememberMeChanged: (Boolean) -> Unit,
-    onLoginClick: () -> Unit,
+    onSubmitClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val context = LocalContext.current
-
     Column(
         modifier = modifier.padding(vertical = 120.dp),
         verticalArrangement = Arrangement.Center,
@@ -121,19 +124,11 @@ fun SignInScreen(
             modifier = Modifier.padding(horizontal = 4.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            Button(onClick = onLoginClick) {
+            Button(onClick = onSubmitClick) {
                 Text(UiText.Res(R.string.submit).asString())
             }
         }
     }
-}
-@Preview(showSystemUi = true)
-@Composable
-fun SignInPreview2() {
-    SignInScreen(
-        uiState =  SignInState.Main(),
-        onEvent =  {}
-    )
 }
 
 @Preview(showSystemUi = true)
@@ -146,7 +141,7 @@ fun SignInPreview() {
         onPasswordChanged = {},
         rememberMe = false.withClearedFocusForNullable(),
         onRememberMeChanged = {},
-        onLoginClick = {},
+        onSubmitClick = {},
         modifier = Modifier
     )
 }
