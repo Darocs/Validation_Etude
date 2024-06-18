@@ -12,10 +12,14 @@ import org.junit.Test
 import ru.polescanner.validation_etude.LocalSnackbarHostState
 import ru.polescanner.validation_etude.domain.general.DI
 import ru.polescanner.validation_etude.domain.general.NameRules
-import ru.polescanner.validation_etude.ui.signin.extensions.LoginExtensions.invalidLoginRegex
-import ru.polescanner.validation_etude.ui.signin.extensions.LoginExtensions.invalidMaxChars
-import ru.polescanner.validation_etude.ui.signin.extensions.LoginExtensions.invalidMinChars
-import ru.polescanner.validation_etude.ui.signin.extensions.LoginExtensions.validLogin
+import ru.polescanner.validation_etude.ui.signin.extensions.LoginExtensions.loginInvalidMaxChars
+import ru.polescanner.validation_etude.ui.signin.extensions.LoginExtensions.loginInvalidMinChars
+import ru.polescanner.validation_etude.ui.signin.extensions.LoginExtensions.loginInvalidRegex
+import ru.polescanner.validation_etude.ui.signin.extensions.LoginExtensions.loginIsValid
+import ru.polescanner.validation_etude.ui.signin.extensions.PasswordExtensions.passwordInvalidMaxChars
+import ru.polescanner.validation_etude.ui.signin.extensions.PasswordExtensions.passwordInvalidMinChars
+import ru.polescanner.validation_etude.ui.signin.extensions.PasswordExtensions.passwordInvalidRegex
+import ru.polescanner.validation_etude.ui.signin.extensions.PasswordExtensions.passwordIsValid
 
 class SignInTest {
     
@@ -25,7 +29,7 @@ class SignInTest {
     @Test
     fun signInRoute() {
         DI.login = NameRules(2, 5, "[1-9]+")
-        DI.password = NameRules(2, 5, "[1-9]+")
+        DI.password = NameRules(3, 6, "[a-zA-Z]+")
 
         composeRule.setContent {
             val snackbarHostState = remember { SnackbarHostState() }
@@ -38,6 +42,7 @@ class SignInTest {
 
         SignInScreen {
             checkLogin()
+            checkPassword()
         }
 
 /*
@@ -48,17 +53,26 @@ class SignInTest {
 
 object SignInScreen : Screen<SignInScreen>(){
 
-    val loginField = hasContentDescription("myTextFieldTag")
-    val passwordField = hasContentDescription("password")
+    private val loginField = hasContentDescription("myTextFieldTag")
+    private val passwordField = hasContentDescription("password")
     val rememberMe = hasContentDescription("checkBox")
     val submitButton = hasContentDescription("submit")
 
     fun checkLogin() {
         loginField.assertTextContains("Login")
             .assertTextContains("")
-            .invalidLoginRegex()
-            .invalidMinChars()
-            .invalidMaxChars()
-            .validLogin()
+            .loginInvalidMinChars()
+            .loginInvalidMaxChars()
+            .loginInvalidRegex()
+            .loginIsValid()
+    }
+
+    fun checkPassword() {
+        passwordField.assertTextContains("Password")
+            .assertTextContains("")
+            .passwordInvalidMinChars()
+            .passwordInvalidMaxChars()
+            .passwordInvalidRegex()
+            .passwordIsValid()
     }
 }

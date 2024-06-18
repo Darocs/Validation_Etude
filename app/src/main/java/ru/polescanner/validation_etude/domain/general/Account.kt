@@ -23,7 +23,7 @@ value class Password private constructor(override val value: String) : Name {
                 .validated(
                     minLen = DI.password?.min ?: 5,
                     maxLen = DI.password?.max ?: 10,
-                    validCharsRegex = DI.login?.regex ?: "[a-zA-Z0-9]+"
+                    validCharsRegex = DI.password?.regex ?: "[a-zA-Z0-9]+"
                 )
     }
 }
