@@ -39,8 +39,6 @@ fun Name.ValidationError.toMessage(): UiText =
         )
 
         is ViolationAllowedChars -> UiText.Res(R.string.not_allowed_chars) + UiText.Str(": ${this.regex}")
-
-        else -> UiText.Res(R.string.smth_get_wrong)
     }
 
 fun VOVErr.toMessage(): UiText = when(this) {
