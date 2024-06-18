@@ -35,3 +35,5 @@ internal fun <V : Name> V.validated(
 fun String.toLogin() = Login(this)
 
 fun String.toPassword() = Password(this)
+
+data class NameRules(val min: Int, val max: Int, val regex: String)
