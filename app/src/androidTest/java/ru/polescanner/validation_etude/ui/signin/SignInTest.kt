@@ -1,43 +1,64 @@
 package ru.polescanner.validation_etude.ui.signin
 
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.remember
 import androidx.compose.ui.test.hasContentDescription
-import androidx.compose.ui.test.hasText
-import androidx.compose.ui.test.onRoot
-import androidx.compose.ui.test.printToLog
 import com.atiurin.ultron.core.compose.createDefaultUltronComposeRule
-import com.atiurin.ultron.extensions.assertIsDisplayed
+import com.atiurin.ultron.extensions.assertTextContains
 import com.atiurin.ultron.page.Screen
 import org.junit.Rule
 import org.junit.Test
+import ru.polescanner.validation_etude.LocalSnackbarHostState
+import ru.polescanner.validation_etude.domain.general.DI
+import ru.polescanner.validation_etude.domain.general.NameRules
+import ru.polescanner.validation_etude.ui.signin.extensions.LoginExtensions.invalidLoginRegex
+import ru.polescanner.validation_etude.ui.signin.extensions.LoginExtensions.invalidMaxChars
+import ru.polescanner.validation_etude.ui.signin.extensions.LoginExtensions.invalidMinChars
+import ru.polescanner.validation_etude.ui.signin.extensions.LoginExtensions.validLogin
 
 class SignInTest {
     
     @get:Rule
     val composeRule = createDefaultUltronComposeRule()
-    
+
     @Test
     fun signInRoute() {
-        composeRule.setContent { 
-            SignInRoute()
+        DI.login = NameRules(2, 5, "[1-9]+")
+        DI.password = NameRules(2, 5, "[1-9]+")
+
+        composeRule.setContent {
+            val snackbarHostState = remember { SnackbarHostState() }
+            CompositionLocalProvider(
+                LocalSnackbarHostState provides snackbarHostState,
+            ) {
+                SignInRoute()
+            }
         }
+
         SignInScreen {
-            loginField.assertIsDisplayed().assertTextContains("Login")
-            //loginField.inputText("A").assert
+            checkLogin()
         }
+
+/*
         composeRule.onRoot().printToLog("My_TAG")
-
-
-
+*/
     }
 }
 
-
-
-
-
 object SignInScreen : Screen<SignInScreen>(){
-    val loginField = hasText("Login")
-    val passwordField = hasText("Password")
-    val submitButton = hasText("Submit")
-    val loginPlaceholder = hasContentDescription("placeholder")
+
+    val loginField = hasContentDescription("myTextFieldTag")
+    val passwordField = hasContentDescription("password")
+    val rememberMe = hasContentDescription("checkBox")
+    val submitButton = hasContentDescription("submit")
+
+    fun checkLogin() {
+        loginField.assertTextContains("Login")
+            .assertTextContains("")
+            .invalidLoginRegex()
+            .invalidMinChars()
+            .invalidMaxChars()
+            .validLogin()
+    }
 }
