@@ -35,7 +35,6 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -126,7 +125,6 @@ fun CustomOutlinedTextField(
                 Text(
                     text = placeholder.asString(),
                     style = MaterialTheme.typography.bodySmall.copy(fontSize = 13.sp),
-                    modifier = Modifier.semantics { contentDescription = "placeholder" },
                 )
             },
             isError = isError,

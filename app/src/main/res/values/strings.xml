@@ -4,6 +4,7 @@
     <string name="alias_hint">Custom name</string>
     <string name="alias_helper_text">The pole by the pond</string>
     <string name="login">Login</string>
+    <string name="login_example">e.g. Darocs</string>
     <string name="enter_login">Enter login</string>
     <string name="password">Password</string>
     <string name="enter_password">Enter password</string>

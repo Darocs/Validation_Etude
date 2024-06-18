@@ -15,6 +15,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -113,7 +115,7 @@ fun SignInScreen(
             CheckBoxWithText(
                 label = UiText.Res(R.string.remember_me).asString(),
                 uiState = rememberMe.value,
-                isFocused = rememberMe.isFocused
+                isFocused = rememberMe.isFocused,
             ) {
                 onRememberMeChanged(onIndeterminateClick(rememberMe.value))
             }
@@ -123,7 +125,8 @@ fun SignInScreen(
             modifier = Modifier.padding(horizontal = 4.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            Button(onClick = onSubmitClick) {
+            Button(onClick = onSubmitClick,
+                modifier = Modifier.semantics { contentDescription = "submit" }) {
                 Text(UiText.Res(R.string.submit).asString())
             }
         }

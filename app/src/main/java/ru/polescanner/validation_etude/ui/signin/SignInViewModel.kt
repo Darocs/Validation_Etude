@@ -51,7 +51,7 @@ class SignInViewModel : AbstractViewModel<SignInState, SignInEvent>() {
                 .fold(
                     ifLeft = { state = it as SignInState.Main },
                     ifRight = { _snackbarText.value =
-                        UiText.Str("Success sing in: login:${it.login.value}, password:${it.password.value}, rememberMe:${it.rememberMe}")
+                        UiText.Str("Welcome! Login:${it.login.value}, password:${it.password.value}, rememberMe:${it.rememberMe}")
                     }
                 )
         }

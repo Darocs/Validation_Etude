@@ -4,6 +4,8 @@ import android.annotation.SuppressLint
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -23,7 +25,7 @@ fun LoginElement(
 ) {
     login.toLogin().let {
         val isError = it.isLeft() && login.isNotBlank()
-        val supportingText = if (isError) it.leftOrNull()!!.toMessage() else UiText.Res(R.string.login)
+        val supportingText = if (isError) it.leftOrNull()!!.toMessage() else UiText.Res(R.string.login_example)
         CustomOutlinedTextField(
             text = login,
             onValueChange = onValueChange,
@@ -33,7 +35,7 @@ fun LoginElement(
             supportingText = supportingText,
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
             isFocused = isFocused,
-            modifier = modifier
+            modifier = modifier.semantics { contentDescription = "myTextFieldTag" }
         )
     }
 }
@@ -47,7 +49,7 @@ fun PasswordElement(
 ) {
     password.toPassword().let {
         val isError = it.isLeft() && password.isNotBlank()
-        val supportingText = if (isError) it.leftOrNull()!!.toMessage() else UiText.Res(R.string.password)
+        val supportingText = if (isError) it.leftOrNull()!!.toMessage() else UiText.Res(R.string.void_text)
         CustomOutlinedTextField(
             text = password,
             onValueChange = onValid,
@@ -62,7 +64,7 @@ fun PasswordElement(
             visualTransformation = PasswordVisualTransformation(),
             hideText = true,
             isFocused = isFocused,
-            modifier = modifier
+            modifier = modifier.semantics { contentDescription = "password" }
         )
     }
 }

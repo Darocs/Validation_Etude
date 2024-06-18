@@ -20,6 +20,8 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.state.ToggleableState
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -50,6 +52,7 @@ fun CheckBoxWithText(
                                     onClick(uiState.nextState())
                                     focusManager.clearFocus()
                                 })
+            .semantics { contentDescription = "checkBox" }
             .focusRequester(focusRequester)
             .focusable(),
         verticalAlignment = Alignment.CenterVertically
