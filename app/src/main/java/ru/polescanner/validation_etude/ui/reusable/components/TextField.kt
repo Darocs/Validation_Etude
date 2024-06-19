@@ -35,7 +35,9 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -94,7 +96,7 @@ fun CustomOutlinedTextField(
                 focusManager.clearFocus()
                 focusRequester.requestFocus()
             }
-            .semantics (mergeDescendants = true) {},
+            .semantics(mergeDescendants = true) { stateDescription = if (isError) "invalid" else "valid" },
         singleLine = singleLine,
         maxLines = maxLines,
         visualTransformation = if (!passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
@@ -116,15 +118,15 @@ fun CustomOutlinedTextField(
             interactionSource = interactionSource,
             label = {
                 Text(
-                    if (isError) label.asString() + "*"
-                    else label.asString(),
-                    style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.SemiBold, fontSize = 13.sp)
+                    text = if (isError) label.asString() + "*" else label.asString(),
+                    style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.SemiBold, fontSize = 13.sp),
+                    modifier = Modifier.semantics { contentDescription = if (isError) "invalid" else "valid" }
                 )
             },
             placeholder = {
                 Text(
                     text = placeholder.asString(),
-                    style = MaterialTheme.typography.bodySmall.copy(fontSize = 13.sp),
+                    style = MaterialTheme.typography.bodySmall.copy(fontSize = 13.sp)
                 )
             },
             isError = isError,
@@ -140,14 +142,13 @@ fun CustomOutlinedTextField(
                              *  as by using [androidx.compose.ui.res.stringResource] or similar
                              */
                             contentDescription = "visibility"
-
                         )
                     }
                 } else if (isError) {
                     Icon(
                         imageVector = Icons.Filled.Error,
                         contentDescription = "error",
-                        tint = colorScheme.error
+                        tint = colorScheme.error,
                     )
                 } else {
                     IconButton(onClick = { onValueChange("") }) {
