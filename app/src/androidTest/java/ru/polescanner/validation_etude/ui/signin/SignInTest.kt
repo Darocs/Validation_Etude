@@ -28,6 +28,7 @@ class SignInTest {
 
     @Test
     fun signInRoute() {
+        //given
         DI.login = NameRules(2, 5, "[1-9]+")
         DI.password = NameRules(3, 6, "[a-zA-Z]+")
 
@@ -52,8 +53,7 @@ class SignInTest {
 }
 
 object SignInScreen : Screen<SignInScreen>(){
-
-    private val loginField = hasContentDescription("myTextFieldTag")
+    private val loginField = hasContentDescription("loginTag")
     private val passwordField = hasContentDescription("password")
     val rememberMe = hasContentDescription("checkBox")
     val submitButton = hasContentDescription("submit")

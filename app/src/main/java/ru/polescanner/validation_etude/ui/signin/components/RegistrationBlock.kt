@@ -35,7 +35,7 @@ fun LoginElement(
             supportingText = supportingText,
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
             isFocused = isFocused,
-            modifier = modifier.semantics { contentDescription = "myTextFieldTag" }
+            modifier = modifier.semantics { contentDescription = "loginTag" }
         )
     }
 }
