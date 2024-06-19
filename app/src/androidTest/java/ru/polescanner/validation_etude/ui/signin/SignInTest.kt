@@ -5,6 +5,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
 import androidx.compose.ui.test.hasContentDescription
 import com.atiurin.ultron.core.compose.createDefaultUltronComposeRule
+import com.atiurin.ultron.core.compose.nodeinteraction.click
 import com.atiurin.ultron.extensions.assertTextContains
 import com.atiurin.ultron.page.Screen
 import org.junit.Rule
@@ -12,6 +13,7 @@ import org.junit.Test
 import ru.polescanner.validation_etude.LocalSnackbarHostState
 import ru.polescanner.validation_etude.domain.general.DI
 import ru.polescanner.validation_etude.domain.general.NameRules
+import ru.polescanner.validation_etude.ui.reusable.components.assertIsIndeterminate
 import ru.polescanner.validation_etude.ui.signin.extensions.LoginExtensions.loginInvalidMaxChars
 import ru.polescanner.validation_etude.ui.signin.extensions.LoginExtensions.loginInvalidMinChars
 import ru.polescanner.validation_etude.ui.signin.extensions.LoginExtensions.loginInvalidRegex
@@ -44,6 +46,7 @@ class SignInTest {
         SignInScreen {
             checkLogin()
             checkPassword()
+            checkRememberMe()
         }
 
 /*
@@ -55,7 +58,7 @@ class SignInTest {
 object SignInScreen : Screen<SignInScreen>(){
     private val loginField = hasContentDescription("loginTag")
     private val passwordField = hasContentDescription("password")
-    val rememberMe = hasContentDescription("checkBox")
+    private val rememberMe = hasContentDescription("checkBox")
     val submitButton = hasContentDescription("submit")
 
     fun checkLogin() {
@@ -74,5 +77,15 @@ object SignInScreen : Screen<SignInScreen>(){
             .passwordInvalidMaxChars()
             .passwordInvalidRegex()
             .passwordIsValid()
+    }
+
+    fun checkRememberMe() {
+        rememberMe.assertTextContains("Remember me")
+            .assertHasClickAction()
+            .assertIsIndeterminate()
+            .click()
+            .assertIsOn()
+            .click()
+            .assertIsOff()
     }
 }
