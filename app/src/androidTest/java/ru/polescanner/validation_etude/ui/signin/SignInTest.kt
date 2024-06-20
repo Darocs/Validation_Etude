@@ -31,7 +31,7 @@ class SignInTest {
     val composeRule = createDefaultUltronComposeRule()
 
     @Test
-    fun signInRoute() {
+    fun signInRouteTest() {
         //given
         DI.login = NameRules(2, 5, "[1-9]+")
         DI.password = NameRules(3, 6, "[a-zA-Z]+")
