@@ -4,6 +4,8 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
 import androidx.compose.ui.test.hasContentDescription
+import androidx.compose.ui.test.onRoot
+import androidx.compose.ui.test.printToLog
 import com.atiurin.ultron.core.compose.createDefaultUltronComposeRule
 import com.atiurin.ultron.core.compose.nodeinteraction.click
 import com.atiurin.ultron.extensions.assertTextContains
@@ -13,7 +15,7 @@ import org.junit.Test
 import ru.polescanner.validation_etude.LocalSnackbarHostState
 import ru.polescanner.validation_etude.domain.general.DI
 import ru.polescanner.validation_etude.domain.general.NameRules
-import ru.polescanner.validation_etude.ui.reusable.components.assertIsIndeterminate
+import ru.polescanner.validation_etude.ui.reusable.components.AssertCheckBox.assertIsIndeterminate
 import ru.polescanner.validation_etude.ui.signin.extensions.LoginExtensions.loginInvalidMaxChars
 import ru.polescanner.validation_etude.ui.signin.extensions.LoginExtensions.loginInvalidMinChars
 import ru.polescanner.validation_etude.ui.signin.extensions.LoginExtensions.loginInvalidRegex
@@ -49,9 +51,7 @@ class SignInTest {
             checkRememberMe()
         }
 
-/*
         composeRule.onRoot().printToLog("My_TAG")
-*/
     }
 }
 
