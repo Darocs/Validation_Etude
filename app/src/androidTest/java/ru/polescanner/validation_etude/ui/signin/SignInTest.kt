@@ -33,8 +33,8 @@ class SignInTest {
     @Test
     fun signInRouteTest() {
         //given
-        DI.login = NameRules(2, 5, "[1-9]+")
-        DI.password = NameRules(3, 6, "[a-zA-Z]+")
+        DI.login = NameRules(2, 3, "[1-9]+")
+        DI.password = NameRules(3, 4, "[a-zA-Z]+")
 
         composeRule.setContent {
             val snackbarHostState = remember { SnackbarHostState() }

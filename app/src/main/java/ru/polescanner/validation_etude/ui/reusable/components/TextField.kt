@@ -81,7 +81,7 @@ fun CustomOutlinedTextField(
         unfocusedContainerColor = colorScheme.onSecondary,
         unfocusedLabelColor = colorScheme.onSurface
     )
-
+    // FIXME: color when error white
     if (isFocused) focusRequester.requestFocus()
 
     BasicTextField(
@@ -95,7 +95,9 @@ fun CustomOutlinedTextField(
                 focusManager.clearFocus()
                 focusRequester.requestFocus()
             }
-            .semantics(mergeDescendants = true) { stateDescription = if (isError) "invalid" else "valid" },
+            .semantics(mergeDescendants = true) {
+                stateDescription = if (isError) "invalid" else "valid"
+            },
         singleLine = singleLine,
         maxLines = maxLines,
         visualTransformation = if (!passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(),

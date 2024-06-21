@@ -36,4 +36,5 @@ fun String.toLogin() = Login(this)
 
 fun String.toPassword() = Password(this)
 
+// TODO: Add documentation
 data class NameRules(val min: Int, val max: Int, val regex: String)
