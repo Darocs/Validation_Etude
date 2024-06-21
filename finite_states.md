@@ -18,7 +18,6 @@ flowchart LR
     Ok0 --fas:fa-keyboard valid ch--> Min
     Ok0 --fas:fa-keyboard inval ch--> Min
 
-    Min --fas:fa-hand-point-right icon--> Ok0
     Min --fas:fa-delete-left valid ch--> Ok0
     Min --fas:fa-delete-left inval ch--> Ok0
     Min --fas:fa-keyboard valid ch--> Ok2
@@ -30,7 +29,6 @@ flowchart LR
     Ok2 --fas:fa-keyboard valid ch--> Ok3
     Ok2 --fas:fa-keyboard inval ch--> Inval3
 
-    Inval2 --fas:fa-hand-point-right icon--> Ok0
     Inval2 --fas:fa-delete-left valid ch--> Min
     Inval2 --fas:fa-delete-left inval ch--> Min
     Inval2 --fas:fa-keyboard valid ch--> Inval3
@@ -41,14 +39,12 @@ flowchart LR
     Ok3 --fas:fa-keyboard valid ch--> Max
     Ok3 --fas:fa-keyboard inval ch--> Max
 
-    Inval3 --fas:fa-hand-point-right icon--> Ok0
     Inval3 --fas:fa-delete-left valid ch--> Inval2
     Inval3 --fas:fa-delete-left inval ch--> Ok2
     Inval3 --fas:fa-delete-left inval ch--> Inval2
     Inval3 --fas:fa-keyboard valid ch--> Max
     Inval3 --fas:fa-keyboard inval ch--> Max
 
-    Max --fas:fa-hand-point-right icon--> Ok0
     Max --fas:fa-delete-left valid ch--> Ok3
     Max --fas:fa-delete-left valid ch--> Inval3
     Max --fas:fa-delete-left valid ch--> Max
