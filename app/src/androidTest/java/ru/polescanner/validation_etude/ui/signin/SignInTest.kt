@@ -10,6 +10,7 @@ import com.atiurin.ultron.core.compose.createDefaultUltronComposeRule
 import com.atiurin.ultron.core.compose.nodeinteraction.click
 import com.atiurin.ultron.extensions.assertTextContains
 import com.atiurin.ultron.page.Screen
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import ru.polescanner.validation_etude.LocalSnackbarHostState
@@ -30,27 +31,31 @@ class SignInTest {
     @get:Rule
     val composeRule = createDefaultUltronComposeRule()
 
-    @Test
-    fun signInRouteTest() {
+    @Before
+    fun setUp() {
         //given
         DI.login = NameRules(2, 3, "[1-9]+")
         DI.password = NameRules(3, 4, "[a-zA-Z]+")
 
-        composeRule.setContent {
-            val snackbarHostState = remember { SnackbarHostState() }
-            CompositionLocalProvider(
-                LocalSnackbarHostState provides snackbarHostState,
-            ) {
-                SignInRoute()
+        composeRule.apply {
+            setContent {
+                val snackbarHostState = remember { SnackbarHostState() }
+                CompositionLocalProvider(
+                    LocalSnackbarHostState provides snackbarHostState,
+                ) {
+                    SignInRoute()
+                }
             }
         }
+    }
 
+    @Test
+    fun signInRouteTest() {
         SignInScreen {
             checkLogin()
             checkPassword()
             checkRememberMe()
         }
-
         composeRule.onRoot().printToLog("My_TAG")
     }
 }
