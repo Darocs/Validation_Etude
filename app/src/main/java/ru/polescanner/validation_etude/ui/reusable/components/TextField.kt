@@ -35,6 +35,8 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -42,6 +44,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ru.polescanner.validation_etude.R
+import ru.polescanner.validation_etude.domain.general.Login
 import ru.polescanner.validation_etude.ui.reusable.util.UiText
 
 /**
@@ -91,7 +94,8 @@ fun CustomOutlinedTextField(
             .clickable {
                 focusManager.clearFocus()
                 focusRequester.requestFocus()
-            },
+            }
+            .semantics(mergeDescendants = true) { stateDescription = if (isError) "invalid" else "valid" },
         singleLine = singleLine,
         maxLines = maxLines,
         visualTransformation = if (!passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
@@ -113,8 +117,7 @@ fun CustomOutlinedTextField(
             interactionSource = interactionSource,
             label = {
                 Text(
-                    if (isError) label.asString() + "*"
-                    else label.asString(),
+                    text = if (isError) label.asString() + "*" else label.asString(),
                     style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.SemiBold, fontSize = 13.sp)
                 )
             },
@@ -130,6 +133,12 @@ fun CustomOutlinedTextField(
                     IconButton(onClick = { passwordVisibility = !passwordVisibility }) {
                         Icon(
                             imageVector = if (!passwordVisibility) Icons.Default.Visibility else Icons.Default.VisibilityOff,
+                            /* ToDo to UiText.Res!!!
+                             *  @param contentDescription text used by accessibility services to describe what this icon
+                             *  represents. This should always be provided unless this icon is used for decorative purposes, and
+                             *  does not represent a meaningful action that a user can take. This text should be localized, such
+                             *  as by using [androidx.compose.ui.res.stringResource] or similar
+                             */
                             contentDescription = "visibility"
                         )
                     }
@@ -137,7 +146,7 @@ fun CustomOutlinedTextField(
                     Icon(
                         imageVector = Icons.Filled.Error,
                         contentDescription = "error",
-                        tint = colorScheme.error
+                        tint = colorScheme.error,
                     )
                 } else {
                     IconButton(onClick = { onValueChange("") }) {
@@ -212,10 +221,11 @@ fun InvalidWithoutTextPreview() {
 )
 @Composable
 fun InvalidShortTextPreviewWith() {
+    val text = "asdsadsadsadsadsaaaaaaaa"
     CustomOutlinedTextField(
-        text = "asdsadsadsadsadsaaaaaaaa",
+        text = text,
         onValueChange = {},
-        isError = true,
+        isError = Login(text).isLeft(),
         label = UiText.Res(R.string.alias_hint),
         placeholder = UiText.Res(R.string.alias_hint),
         supportingText = UiText.Res(R.string.alias_helper_text)

@@ -9,12 +9,13 @@ android {
 
     defaultConfig {
         applicationId = "ru.polescanner.validation_etude"
-        minSdk = 34
+        minSdk = 33
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "com.atiurin.ultron.allure.UltronAllureTestRunner"
+                //"androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
         }
@@ -43,6 +44,21 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+    /* ToDo analize from Tiurin
+    packagingOptions {
+        resources.excludes.add("META-INF/DEPENDENCIES")
+        resources.excludes.add("META-INF/LICENSE")
+        resources.excludes.add("META-INF/LICENSE.txt")
+        resources.excludes.add("META-INF/license.txt")
+        resources.excludes.add("META-INF/NOTICE")
+        resources.excludes.add("META-INF/NOTICE.txt")
+        resources.excludes.add("META-INF/notice.txt")
+        resources.excludes.add("META-INF/AL2.0")
+        resources.excludes.add("META-INF/LGPL2.1")
+        */
+    //    resources.excludes.add("META-INF/*.kotlin_module")
+    //}
+
 }
 
 dependencies {
@@ -57,10 +73,10 @@ dependencies {
     implementation(libs.androidx.room.ktx)
     implementation(libs.androidx.material.icons.extended)
     testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
+    // androidTestImplementation(libs.androidx.junit) //ToDo check that Ultron
+    // androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
-    androidTestImplementation(libs.androidx.ui.test.junit4)
+    //androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation(libs.androidx.lifecycle.runtime.compose)
@@ -68,4 +84,6 @@ dependencies {
     implementation(libs.bundles.validation)
     implementation(libs.bundles.arrow)
     implementation(libs.kotlin.reflect)
+
+    androidTestImplementation(libs.bundles.ultron)
 }

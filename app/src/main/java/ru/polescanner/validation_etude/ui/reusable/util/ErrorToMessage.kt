@@ -1,6 +1,7 @@
 package ru.polescanner.validation_etude.ui.reusable.util
 
 import ru.polescanner.validation_etude.R
+import ru.polescanner.validation_etude.domain.general.BooleanValidationError
 import ru.polescanner.validation_etude.domain.general.Name
 import ru.polescanner.validation_etude.domain.general.Name.ValidationError.ExceedMaxChar
 import ru.polescanner.validation_etude.domain.general.Name.ValidationError.NotTrimmed
@@ -38,12 +39,10 @@ fun Name.ValidationError.toMessage(): UiText =
         )
 
         is ViolationAllowedChars -> UiText.Res(R.string.not_allowed_chars) + UiText.Str(": ${this.regex}")
-
-        else -> UiText.Res(R.string.smth_get_wrong)
     }
 
 fun VOVErr.toMessage(): UiText = when(this) {
     is Name.ValidationError -> this.toMessage()
-
+    BooleanValidationError -> UiText.Res(R.string.undefined)
     else -> TODO()
 }

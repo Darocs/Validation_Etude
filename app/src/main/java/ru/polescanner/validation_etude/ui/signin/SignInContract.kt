@@ -7,24 +7,25 @@ import ru.polescanner.validation_etude.domain.general.Login
 import ru.polescanner.validation_etude.domain.general.Password
 import ru.polescanner.validation_etude.domain.general.check
 import ru.polescanner.validation_etude.domain.security.Credentials
+import ru.polescanner.validation_etude.ui.reusable.util.Focusable
 import ru.polescanner.validation_etude.ui.reusable.util.UiEvent
 import ru.polescanner.validation_etude.ui.reusable.util.UiState
 import ru.polescanner.validation_etude.ui.reusable.util.UiText
-import ru.polescanner.validation_etude.ui.reusable.util.ValidOrFocusedAtCheck
 import ru.polescanner.validation_etude.ui.reusable.util.atMostOneFocused
 import ru.polescanner.validation_etude.ui.reusable.util.parseOrPrompt
 import ru.polescanner.validation_etude.ui.reusable.util.withClearedFocus
+import ru.polescanner.validation_etude.ui.reusable.util.withClearedFocusForNullable
 
 @Immutable
 sealed interface SignInState: UiState {
     data object Loading: SignInState
     data class Main(
-        val login: ValidOrFocusedAtCheck<String> = "".withClearedFocus(),
-        val password: ValidOrFocusedAtCheck<String> = "".withClearedFocus(),
-        val rememberMe: ValidOrFocusedAtCheck<Boolean> = false.withClearedFocus(),
+        val login: Focusable<String> = "".withClearedFocus(),
+        val password: Focusable<String> = "".withClearedFocus(),
+        val rememberMe: Focusable<Boolean?> = null.withClearedFocusForNullable(),
     ): SignInState {
         init {
-            require( atMostOneFocused() ) { "only one view can be focused!" }
+            require( atMostOneFocused() ) { "Only one view can be focused at a time!" }
         }
 
         fun toCredentials(inform: (UiText) -> Unit): Either<UiState, Credentials> = either {
@@ -44,8 +45,8 @@ sealed interface SignInEvent: UiEvent {
     //MainScreen editing
     data class OnLoginChanged(val login: String): SignInEvent
     data class OnPasswordChanged(val password: String): SignInEvent
-    data class OnRememberMeFor30DaysChanged(val remember: Boolean): SignInEvent
+    data class OnRememberMeChanged(val remember: Boolean): SignInEvent
 
-    //MainScreen actions clicks
+    //MainScreen action click
     data object OnSubmit: SignInEvent
 }

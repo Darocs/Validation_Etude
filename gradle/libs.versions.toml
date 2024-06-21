@@ -13,6 +13,7 @@ apache-commons = "3.14.0"
 konform = "0.4.0"
 
 roomKtx = "2.6.1"
+ultron = "2.3.5"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -40,10 +41,15 @@ konform = { module = "io.konform:konform", version.ref = "konform" }
 apache-commons = { module = "org.apache.commons:commons-lang3", version.ref = "apache-commons" }
 kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "kotlin" }
 
+ultron = { module = "com.atiurin:ultron", version.ref = "ultron" }
+ultron-compose = { module = "com.atiurin:ultron-compose", version.ref = "ultron" }
+ultron-allure = { module = "com.atiurin:ultron-allure", version.ref = "ultron" }
+
 [bundles]
 #<-----domain----->
 arrow = ["arrow-core", "arrow-fx-coroutines"]
 validation = ["konform", "apache-commons"]
+ultron = ["ultron", "ultron-compose", "ultron-allure"]
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

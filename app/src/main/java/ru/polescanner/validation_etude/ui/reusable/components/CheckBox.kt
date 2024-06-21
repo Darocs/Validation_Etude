@@ -2,6 +2,7 @@ package ru.polescanner.validation_etude.ui.reusable.components
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.LocalIndication
+import androidx.compose.foundation.focusable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
@@ -17,7 +18,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.state.ToggleableState
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -34,6 +38,7 @@ fun CheckBoxWithText(
 ) {
     val focusRequester = remember { FocusRequester() }
     val toggleableUiState = uiState.toToggleableState()
+    val focusManager = LocalFocusManager.current
 
     if (isFocused) focusRequester.requestFocus()
 
@@ -43,8 +48,13 @@ fun CheckBoxWithText(
                                 interactionSource = remember { MutableInteractionSource() },
                                 indication = LocalIndication.current,
                                 role = Role.Checkbox,
-                                onClick = { onClick(uiState.nextState()) })
-            .focusRequester(focusRequester),
+                                onClick = {
+                                    onClick(uiState.nextState())
+                                    focusManager.clearFocus()
+                                })
+            .semantics { contentDescription = "checkBox" }
+            .focusRequester(focusRequester)
+            .focusable(),
         verticalAlignment = Alignment.CenterVertically
     ) {
         TriStateCheckbox(
@@ -73,7 +83,7 @@ private fun Boolean?.toToggleableState() =
         else ToggleableState.Off
     } ?: ToggleableState.Indeterminate
 
-fun Boolean?.nextState() =
+private fun Boolean?.nextState() =
     this?.let{ !it } ?: true
 
 @Preview(showBackground = true)
@@ -94,5 +104,4 @@ fun CheckBoxWithTextPreviewFalse() {
     ) {}
 }
 
-fun onIndeterminateClick(value: Boolean?): Boolean =
-    value?.let{ !it }?: true
+fun onIndeterminateClick(value: Boolean?): Boolean = value.nextState()
