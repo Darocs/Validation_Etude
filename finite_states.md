@@ -25,7 +25,6 @@ flowchart LR
 
     Ok2 --fas:fa-hand-point-right icon--> Ok0
     Ok2 --fas:fa-delete-left valid ch--> Min
-    Ok2 --fas:fa-delete-left inval ch--> Min
     Ok2 --fas:fa-keyboard valid ch--> Ok3
     Ok2 --fas:fa-keyboard inval ch--> Inval3
 
