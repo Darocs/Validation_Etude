@@ -41,7 +41,7 @@ class SignInTest {
 
     @Before
     fun setUp() {
-        //given
+        //Given
         DI.login = NameRules(2, 3, "[1-9]+")
         DI.password = NameRules(3, 4, "[a-zA-Z]+")
 
@@ -69,7 +69,7 @@ class SignInTest {
 
     @Test
     fun loginFieldTest() {
-        // given
+        // Given
         val loginLabel = "Login"
         val errorLoginLabel = "Login*"
 
@@ -78,35 +78,60 @@ class SignInTest {
         val maxCharError = "Max ${login?.max} chars"
         val regexError = "Allowed chars: ${login?.regex}"
 
-        val emptyText = ""
+        val ok0 = ""
+        val ok2 = "12"
+        val ok3 = "123"
         val validMinChar = "1"
-        val invalMinChar = "C"
+        val invalRegex1 = "A"
+        val invalRegex2 = "AC"
+        val invalRegex3 = "ACE"
 
-        val invalRegex2 = "1C"
-        val invalRegex3 = "1CE"
-
-        // from okay to okay0
+        // From ok0 to ok0
         loginField.clickCenterRight().assertTextContains(loginLabel)
-            .assertTextContains(emptyText)
+            .assertTextContains(ok0)
             .assertTextContains(supportingText)
             .assertStateDescriptionContains("valid")
         loginField.click().assertTextContains(loginLabel)
-            .assertTextContains(emptyText.dropLast(1))
+            .assertTextContains(ok0.dropLast(1))
             .assertTextContains(supportingText)
             .assertStateDescriptionContains("valid")
 
-        // from okay0 to min
-        loginField.assertTextContains(emptyText).assertStateDescriptionContains("valid")
+        // From ok0 to min
+        loginField.assertTextContains(ok0).assertStateDescriptionContains("valid")
             .setText(validMinChar)
             .assertTextContains(errorLoginLabel)
             .assertTextContains(validMinChar)
             .assertTextContains(minCharError)
             .assertStateDescriptionContains("invalid")
-        loginField.setText(emptyText).assertTextContains(emptyText).setText(invalMinChar)
+        loginField.setText(ok0).assertTextContains(ok0).setText(invalRegex1)
             .assertTextContains(errorLoginLabel)
-            .assertTextContains(invalMinChar)
+            .assertTextContains(invalRegex1)
             .assertTextContains(minCharError)
             .assertStateDescriptionContains("invalid")
+
+        // From min to ok0/ok2/invalRegex
+        loginField.setText(validMinChar).assertStateDescriptionContains("invalid")
+            .setText(validMinChar.dropLast(1)).assertStateDescriptionContains("valid")
+            .assertTextContains(loginLabel)
+            .assertTextContains(ok0)
+            .assertTextContains(supportingText)
+        loginField.setText(invalRegex1).assertStateDescriptionContains("invalid")
+            .setText(invalRegex1.dropLast(1)).assertStateDescriptionContains("valid")
+            .assertTextContains(loginLabel)
+            .assertTextContains(ok0)
+            .assertTextContains(supportingText)
+        loginField.setText(validMinChar + "2").assertStateDescriptionContains("valid")
+            .assertTextContains(loginLabel)
+            .assertTextContains(ok2)
+            .assertTextContains(supportingText)
+        loginField.setText(invalRegex1 + "C").assertStateDescriptionContains("invalid")
+            .assertTextContains(errorLoginLabel)
+            .assertTextContains(invalRegex2)
+            .assertTextContains(regexError) // InvalidCh + invalidCh = regexError
+        loginField.setText(validMinChar + "C").assertStateDescriptionContains("invalid")
+            .assertTextContains(errorLoginLabel)
+            .assertTextContains(invalRegex2)
+            .assertTextContains(regexError) // ValidCh + invalidCh = regexError
     }
 }
 
