@@ -6,6 +6,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.test.hasContentDescription
 import com.atiurin.ultron.core.compose.createDefaultUltronComposeRule
 import com.atiurin.ultron.core.compose.nodeinteraction.click
+import com.atiurin.ultron.core.compose.nodeinteraction.clickCenterRight
 import com.atiurin.ultron.extensions.assertIsDisplayed
 import com.atiurin.ultron.extensions.assertTextContains
 import com.atiurin.ultron.extensions.click
@@ -100,16 +101,17 @@ class SignInTest {
         // From ok0 to min
         loginField.assertTextContains(ok0).assertTextContains(ok0)
             .assertStateDescriptionContains("valid")
-            .setText(validMinChar)
+            .setText(validMinChar).assertStateDescriptionContains("invalid")
             .assertTextContains(errorLoginLabel)
             .assertTextContains(validMinChar)
             .assertTextContains(minCharError)
-            .assertStateDescriptionContains("invalid")
-        loginField.setText(ok0).assertTextContains(ok0).setText(invalRegex1)
+        loginField.setText(ok0).assertTextContains(ok0)
+            .assertStateDescriptionContains("valid")
+            .setText(invalRegex1).assertStateDescriptionContains("invalid")
             .assertTextContains(errorLoginLabel)
             .assertTextContains(invalRegex1)
             .assertTextContains(minCharError)
-            .assertStateDescriptionContains("invalid")
+
 
         // From min to ok0/ok2/invalRegex
         loginField.setText(validMinChar).assertTextContains(validMinChar)
@@ -136,6 +138,29 @@ class SignInTest {
             .assertTextContains(errorLoginLabel)
             .assertTextContains(validMinChar + "C")
             .assertTextContains(regexError) // ValidCh + invalidCh = regexError
+
+        // From ok2 to ok0/min/ok3/inval3
+        loginField.setText(ok2).assertTextContains(ok2)
+            .assertStateDescriptionContains("valid")
+            .clickCenterRight()
+            .assertTextContains(ok0)
+        loginField.setText(ok2).assertTextContains(ok2)
+            .assertStateDescriptionContains("valid")
+            .setText(ok2.dropLast(1)).assertStateDescriptionContains("invalid")
+            .assertTextContains(errorLoginLabel)
+            .assertTextContains(validMinChar)
+            .assertTextContains(minCharError)
+        loginField.setText(ok2).assertTextContains(ok2)
+            .assertStateDescriptionContains("valid")
+            .setText(ok2 + "3")
+            .assertTextContains(loginLabel)
+            .assertTextContains(ok3)
+            .assertTextContains(supportingText)
+            .assertStateDescriptionContains("valid")
+        loginField.setText(ok2 + "E").assertStateDescriptionContains("invalid")
+            .assertTextContains(errorLoginLabel)
+            .assertTextContains(ok2 + "E")
+            .assertTextContains(regexError) // ValidCh + validCh + invalidCh = regexError
     }
 }
 
