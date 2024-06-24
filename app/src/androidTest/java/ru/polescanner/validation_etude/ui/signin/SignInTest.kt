@@ -130,7 +130,7 @@ class SignInTest {
             .assertTextContains(regexError) // InvalidCh + invalidCh = regexError
         loginField.setText(validMinChar + "C").assertStateDescriptionContains("invalid")
             .assertTextContains(errorLoginLabel)
-            .assertTextContains(invalRegex2)
+            .assertTextContains(validMinChar + "C")
             .assertTextContains(regexError) // ValidCh + invalidCh = regexError
     }
 }
