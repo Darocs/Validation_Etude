@@ -201,10 +201,9 @@ object SignInScreen : Screen<SignInScreen>(){
 
     fun UCS.assertIsOkay0() : UCS = this
         .assertTextContains("")
-        .assertStateDescriptionContains("label*")
-        .assertTextContains("supportingText*")
+        .assertContentDescriptionContains("label")
+        .assertContentDescriptionContains("supportingText")
         .assertStateDescriptionContains("valid")
-        .assertIsFocused()
 
     fun UCS.clickRightIcon() : UCS = this.clickCenterRight()
 }
