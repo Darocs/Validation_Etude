@@ -120,7 +120,8 @@ fun CustomOutlinedTextField(
             label = {
                 Text(
                     text = if (isError) label.asString() + "*" else label.asString(),
-                    style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.SemiBold, fontSize = 13.sp)
+                    style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.SemiBold, fontSize = 13.sp),
+                    modifier = Modifier.semantics { stateDescription = if (isError) "label*" else "label" }
                 )
             },
             placeholder = {
@@ -161,7 +162,9 @@ fun CustomOutlinedTextField(
             },
             supportingText = {
                 Text(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .semantics { stateDescription = if (isError) "supportingText*" else "supportingText" },
                     text = supportingText.asString(),
                     style = MaterialTheme.typography.labelSmall,
                     color = if (isError) colorScheme.error else colorScheme.onBackground
