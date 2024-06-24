@@ -35,6 +35,7 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.font.FontWeight
@@ -121,7 +122,7 @@ fun CustomOutlinedTextField(
                 Text(
                     text = if (isError) label.asString() + "*" else label.asString(),
                     style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.SemiBold, fontSize = 13.sp),
-                    modifier = Modifier.semantics { stateDescription = if (isError) "label*" else "label" }
+                    modifier = Modifier.semantics { contentDescription = if (isError) "label*" else "label" }
                 )
             },
             placeholder = {
@@ -164,7 +165,7 @@ fun CustomOutlinedTextField(
                 Text(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .semantics { stateDescription = if (isError) "supportingText*" else "supportingText" },
+                        .semantics { contentDescription = if (isError) "supportingText*" else "supportingText" },
                     text = supportingText.asString(),
                     style = MaterialTheme.typography.labelSmall,
                     color = if (isError) colorScheme.error else colorScheme.onBackground
