@@ -8,14 +8,18 @@ import com.atiurin.ultron.core.compose.createDefaultUltronComposeRule
 import com.atiurin.ultron.core.compose.nodeinteraction.click
 import com.atiurin.ultron.extensions.assertIsDisplayed
 import com.atiurin.ultron.extensions.assertTextContains
+import com.atiurin.ultron.extensions.click
+import com.atiurin.ultron.extensions.clickCenterRight
 import com.atiurin.ultron.page.Screen
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import ru.polescanner.validation_etude.LocalSnackbarHostState
 import ru.polescanner.validation_etude.domain.general.DI
+import ru.polescanner.validation_etude.domain.general.DI.login
 import ru.polescanner.validation_etude.domain.general.NameRules
 import ru.polescanner.validation_etude.ui.reusable.components.AssertCheckBox.assertIsIndeterminate
+import ru.polescanner.validation_etude.ui.reusable.components.AssertStateDescription.assertStateDescriptionContains
 import ru.polescanner.validation_etude.ui.signin.SignInScreen.loginField
 import ru.polescanner.validation_etude.ui.signin.SignInScreen.passwordField
 import ru.polescanner.validation_etude.ui.signin.SignInScreen.rememberMe
@@ -54,10 +58,37 @@ class SignInTest {
 
     @Test
     fun signInScreenTest() {
-        loginField.assertIsDisplayed().assertHasClickAction().assertIsNotFocused()
-        passwordField.assertIsDisplayed().assertHasClickAction().assertIsNotFocused()
+        loginField.assertIsDisplayed().assertHasClickAction()
+            .assertStateDescriptionContains("valid").assertIsNotFocused()
+        passwordField.assertIsDisplayed().assertHasClickAction()
+            .assertStateDescriptionContains("valid").assertIsNotFocused()
         rememberMe.assertIsDisplayed().assertHasClickAction().assertIsNotFocused()
         submitButton.assertIsDisplayed().assertHasClickAction().assertIsNotFocused()
+    }
+
+    @Test
+    fun loginFieldTest() {
+        // given
+        val loginLabel = "Login"
+        val errorLoginLabel = "Login*"
+
+        val supportingText = "e.g. Darocs"
+        val minCharError = "Min ${login?.min} chars"
+        val maxCharError = "Max ${login?.max} chars"
+        val regexError = "Allowed chars: ${login?.regex}"
+
+        val emptyText = ""
+        val validMinChar = "1"
+        val invalMinChar = "A"
+
+        val invalRegex = "AC"
+
+        // from okay to okay
+        loginField.clickCenterRight().assertTextContains(emptyText)
+        loginField.click().assertTextContains(emptyText.dropLast(1))
+            .assertTextContains(loginLabel)
+            .assertTextContains(supportingText)
+            .assertStateDescriptionContains("valid")
     }
 }
 
