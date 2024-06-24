@@ -34,6 +34,7 @@ import ru.polescanner.validation_etude.ui.signin.extensions.PasswordExtensions.p
 import ru.polescanner.validation_etude.ui.signin.extensions.PasswordExtensions.passwordInvalidMinChars
 import ru.polescanner.validation_etude.ui.signin.extensions.PasswordExtensions.passwordInvalidRegex
 import ru.polescanner.validation_etude.ui.signin.extensions.PasswordExtensions.passwordIsValid
+import ru.polescanner.validation_etude.ui.signin.extensions.UCS
 
 class SignInTest {
     
@@ -197,4 +198,13 @@ object SignInScreen : Screen<SignInScreen>(){
             .click()
             .assertIsOff()
     }
+
+    fun UCS.assertIsOkay0() : UCS = this
+        .assertTextContains("")
+        .assertStateDescriptionContains("label*")
+        .assertTextContains("supportingText*")
+        .assertStateDescriptionContains("valid")
+        .assertIsFocused()
+
+    fun UCS.clickRightIcon() : UCS = this.clickCenterRight()
 }
