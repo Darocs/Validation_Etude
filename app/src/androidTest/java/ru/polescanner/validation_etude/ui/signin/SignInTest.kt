@@ -83,11 +83,35 @@ class SignInTest {
 
         val invalRegex = "AC"
 
-        // from okay to okay
-        loginField.clickCenterRight().assertTextContains(emptyText)
-        loginField.click().assertTextContains(emptyText.dropLast(1))
-            .assertTextContains(loginLabel)
+        // from okay to okay0
+        loginField.clickCenterRight().assertTextContains(loginLabel)
+            .assertTextContains(emptyText)
             .assertTextContains(supportingText)
+            .assertStateDescriptionContains("valid")
+        loginField.click().assertTextContains(loginLabel)
+            .assertTextContains(emptyText.dropLast(1))
+            .assertTextContains(supportingText)
+            .assertStateDescriptionContains("valid")
+
+        // from okay0 to min
+        loginField.assertTextContains(emptyText).setText(validMinChar)
+            .assertTextContains(errorLoginLabel)
+            .assertTextContains(validMinChar)
+            .assertTextContains(minCharError)
+            .assertStateDescriptionContains("invalid")
+            .setText(validMinChar.dropLast(1)).assertTextContains(emptyText)
+            .assertStateDescriptionContains("valid")
+        loginField.assertTextContains(emptyText).setText(invalMinChar)
+            .assertTextContains(errorLoginLabel)
+            .assertTextContains(invalMinChar)
+            .assertTextContains(minCharError)
+            .assertStateDescriptionContains("invalid")
+            .setText(invalMinChar + "C")
+            .assertTextContains(errorLoginLabel)
+            .assertTextContains(invalRegex)
+            .assertTextContains(regexError)
+            .assertStateDescriptionContains("invalid")
+            .setText(invalMinChar.dropLast(1)).assertTextContains(emptyText)
             .assertStateDescriptionContains("valid")
     }
 }
