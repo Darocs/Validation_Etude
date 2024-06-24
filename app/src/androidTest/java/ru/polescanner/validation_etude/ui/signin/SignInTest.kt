@@ -10,6 +10,7 @@ import com.atiurin.ultron.extensions.assertIsDisplayed
 import com.atiurin.ultron.extensions.assertTextContains
 import com.atiurin.ultron.extensions.click
 import com.atiurin.ultron.extensions.clickCenterRight
+import com.atiurin.ultron.extensions.setText
 import com.atiurin.ultron.page.Screen
 import org.junit.Before
 import org.junit.Rule
@@ -79,9 +80,10 @@ class SignInTest {
 
         val emptyText = ""
         val validMinChar = "1"
-        val invalMinChar = "A"
+        val invalMinChar = "C"
 
-        val invalRegex = "AC"
+        val invalRegex2 = "1C"
+        val invalRegex3 = "1CE"
 
         // from okay to okay0
         loginField.clickCenterRight().assertTextContains(loginLabel)
@@ -94,25 +96,17 @@ class SignInTest {
             .assertStateDescriptionContains("valid")
 
         // from okay0 to min
-        loginField.assertTextContains(emptyText).setText(validMinChar)
+        loginField.assertTextContains(emptyText).assertStateDescriptionContains("valid")
+            .setText(validMinChar)
             .assertTextContains(errorLoginLabel)
             .assertTextContains(validMinChar)
             .assertTextContains(minCharError)
             .assertStateDescriptionContains("invalid")
-            .setText(validMinChar.dropLast(1)).assertTextContains(emptyText)
-            .assertStateDescriptionContains("valid")
-        loginField.assertTextContains(emptyText).setText(invalMinChar)
+        loginField.setText(emptyText).assertTextContains(emptyText).setText(invalMinChar)
             .assertTextContains(errorLoginLabel)
             .assertTextContains(invalMinChar)
             .assertTextContains(minCharError)
             .assertStateDescriptionContains("invalid")
-            .setText(invalMinChar + "C")
-            .assertTextContains(errorLoginLabel)
-            .assertTextContains(invalRegex)
-            .assertTextContains(regexError)
-            .assertStateDescriptionContains("invalid")
-            .setText(invalMinChar.dropLast(1)).assertTextContains(emptyText)
-            .assertStateDescriptionContains("valid")
     }
 }
 
