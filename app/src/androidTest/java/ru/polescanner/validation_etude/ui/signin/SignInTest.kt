@@ -205,6 +205,12 @@ object SignInScreen : Screen<SignInScreen>(){
         .assertContentDescriptionContains("supportingText")
         .assertStateDescriptionContains("valid")
 
+    fun UCS.assertIsOkay2(text: String) : UCS = this
+        .assertTextContains(text)
+        .assertContentDescriptionContains("label")
+        .assertContentDescriptionContains("supportingText")
+        .assertStateDescriptionContains("valid")
+
     fun UCS.assertIsMin(text: String) : UCS = this
         .assertContentDescriptionContains("label*")
         .assertTextContains(text)
@@ -217,13 +223,6 @@ object SignInScreen : Screen<SignInScreen>(){
         .assertTextContains(text)
         .assertContentDescriptionContains("supportingText*")
         .assertContentDescriptionContains("Max ${login?.max} chars")
-        .assertStateDescriptionContains("invalid")
-
-    fun UCS.assertIsInvalidRegex(text: String) : UCS = this
-        .assertContentDescriptionContains("label*")
-        .assertTextContains(text)
-        .assertContentDescriptionContains("supportingText*")
-        .assertTextContains("Allowed chars: ${login?.regex}")
         .assertStateDescriptionContains("invalid")
 
     fun UCS.clickRightIcon() : UCS = this.clickCenterRight()
