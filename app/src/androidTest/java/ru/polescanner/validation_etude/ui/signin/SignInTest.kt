@@ -10,7 +10,6 @@ import com.atiurin.ultron.core.compose.nodeinteraction.clickCenterRight
 import com.atiurin.ultron.extensions.assertIsDisplayed
 import com.atiurin.ultron.extensions.assertTextContains
 import com.atiurin.ultron.extensions.click
-import com.atiurin.ultron.extensions.clickCenterRight
 import com.atiurin.ultron.extensions.setText
 import com.atiurin.ultron.page.Screen
 import org.junit.Before
@@ -22,6 +21,8 @@ import ru.polescanner.validation_etude.domain.general.DI.login
 import ru.polescanner.validation_etude.domain.general.NameRules
 import ru.polescanner.validation_etude.ui.reusable.components.AssertCheckBox.assertIsIndeterminate
 import ru.polescanner.validation_etude.ui.reusable.components.AssertStateDescription.assertStateDescriptionContains
+import ru.polescanner.validation_etude.ui.signin.SignInScreen.assertIsOkay0
+import ru.polescanner.validation_etude.ui.signin.SignInScreen.clickRightIcon
 import ru.polescanner.validation_etude.ui.signin.SignInScreen.loginField
 import ru.polescanner.validation_etude.ui.signin.SignInScreen.passwordField
 import ru.polescanner.validation_etude.ui.signin.SignInScreen.rememberMe
@@ -80,7 +81,7 @@ class SignInTest {
         val maxCharError = "Max ${login?.max} chars"
         val regexError = "Allowed chars: ${login?.regex}"
 
-        val ok0 = ""
+        val ok0Text = ""
         val ok2 = "12"
         val ok3 = "123"
         val validMinChar = "1"
@@ -88,27 +89,20 @@ class SignInTest {
         val invalRegex2 = "AC"
         val invalRegex3 = "ACE"
 
+        val ok0 = loginField.click()
+
         // From ok0 to ok0
-        loginField.clickCenterRight().assertTextContains(loginLabel)
-            .assertTextContains(ok0)
-            .assertTextContains(supportingText)
-            .assertStateDescriptionContains("valid")
-        loginField.click().setText(ok0.dropLast(1))
-            .assertTextContains(loginLabel)
-            .assertTextContains(ok0)
-            .assertTextContains(supportingText)
-            .assertStateDescriptionContains("valid")
+        ok0.clickRightIcon().assertIsOkay0()
+        ok0.setText(ok0Text.dropLast(1)).assertIsOkay0()
 
         // From ok0 to min
-        loginField.assertTextContains(ok0).assertTextContains(ok0)
-            .assertStateDescriptionContains("valid")
-            .setText(validMinChar).assertStateDescriptionContains("invalid")
+        ok0.setText(validMinChar)
+            .assertStateDescriptionContains("invalid")
             .assertTextContains(errorLoginLabel)
             .assertTextContains(validMinChar)
             .assertTextContains(minCharError)
-        loginField.setText(ok0).assertTextContains(ok0)
-            .assertStateDescriptionContains("valid")
-            .setText(invalRegex1).assertStateDescriptionContains("invalid")
+        ok0.setText(invalRegex1)
+            .assertStateDescriptionContains("invalid")
             .assertTextContains(errorLoginLabel)
             .assertTextContains(invalRegex1)
             .assertTextContains(minCharError)
@@ -117,16 +111,12 @@ class SignInTest {
         // From min to ok0/ok2/invalRegex
         loginField.setText(validMinChar).assertTextContains(validMinChar)
             .assertStateDescriptionContains("invalid")
-            .setText(validMinChar.dropLast(1)).assertStateDescriptionContains("valid")
-            .assertTextContains(loginLabel)
-            .assertTextContains(ok0)
-            .assertTextContains(supportingText)
+            .setText(validMinChar.dropLast(1))
+            .assertIsOkay0()
         loginField.setText(invalRegex1).assertTextContains(invalRegex1)
             .assertStateDescriptionContains("invalid")
-            .setText(invalRegex1.dropLast(1)).assertStateDescriptionContains("valid")
-            .assertTextContains(loginLabel)
-            .assertTextContains(ok0)
-            .assertTextContains(supportingText)
+            .setText(invalRegex1.dropLast(1))
+            .assertIsOkay0()
         loginField.setText(validMinChar + "2").assertStateDescriptionContains("valid")
             .assertTextContains(loginLabel)
             .assertTextContains(ok2)
@@ -143,8 +133,8 @@ class SignInTest {
         // From ok2 to ok0/min/ok3/inval3
         loginField.setText(ok2).assertTextContains(ok2)
             .assertStateDescriptionContains("valid")
-            .clickCenterRight()
-            .assertTextContains(ok0)
+            .clickRightIcon()
+            .assertIsOkay0()
         loginField.setText(ok2).assertTextContains(ok2)
             .assertStateDescriptionContains("valid")
             .setText(ok2.dropLast(1)).assertStateDescriptionContains("invalid")
