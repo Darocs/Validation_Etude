@@ -225,5 +225,12 @@ object SignInScreen : Screen<SignInScreen>(){
         .assertContentDescriptionContains("Max ${login?.max} chars")
         .assertStateDescriptionContains("invalid")
 
+    fun UCS.assertIsInvalidRegex(text: String) : UCS = this
+        .assertContentDescriptionContains("label*")
+        .assertTextContains(text)
+        .assertContentDescriptionContains("supportingText*")
+        .assertTextContains("Allowed chars: ${login?.regex}")
+        .assertStateDescriptionContains("invalid")
+
     fun UCS.clickRightIcon() : UCS = this.clickCenterRight()
 }
