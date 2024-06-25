@@ -162,34 +162,6 @@ object SignInScreen : Screen<SignInScreen>(){
 
     val ok0 = loginField.click()
 
-    fun checkLogin() {
-        loginField.assertTextContains("Login")
-            .assertTextContains("")
-            .loginInvalidMinChars()
-            .loginInvalidMaxChars()
-            .loginInvalidRegex()
-            .loginIsValid()
-    }
-
-    fun checkPassword() {
-        passwordField.assertTextContains("Password")
-            .assertTextContains("")
-            .passwordInvalidMinChars()
-            .passwordInvalidMaxChars()
-            .passwordInvalidRegex()
-            .passwordIsValid()
-    }
-
-    fun checkRememberMe() {
-        rememberMe.assertTextContains("Remember me")
-            .assertHasClickAction()
-            .assertIsIndeterminate()
-            .click()
-            .assertIsOn()
-            .click()
-            .assertIsOff()
-    }
-
     fun UCS.assertIsOkay0() : UCS = this
         .assertTextContains("")
         .assertContentDescriptionContains("label")
