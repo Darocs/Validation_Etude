@@ -18,10 +18,9 @@ import ru.polescanner.validation_etude.domain.general.DI
 import ru.polescanner.validation_etude.domain.general.DI.login
 import ru.polescanner.validation_etude.domain.general.NameRules
 import ru.polescanner.validation_etude.ui.reusable.components.AssertStateDescription.assertStateDescriptionContains
-import ru.polescanner.validation_etude.ui.signin.SignInScreen.assertIsOkay0
+import ru.polescanner.validation_etude.ui.signin.LoginFieldStates.ok0
 import ru.polescanner.validation_etude.ui.signin.SignInScreen.clickRightIcon
 import ru.polescanner.validation_etude.ui.signin.SignInScreen.loginField
-import ru.polescanner.validation_etude.ui.signin.SignInScreen.ok0
 import ru.polescanner.validation_etude.ui.signin.SignInScreen.passwordField
 import ru.polescanner.validation_etude.ui.signin.SignInScreen.rememberMe
 import ru.polescanner.validation_etude.ui.signin.SignInScreen.submitButton
@@ -151,4 +150,8 @@ object SignInScreen : Screen<SignInScreen>(){
     val submitButton = hasContentDescription("submit")
 
     fun UCS.clickRightIcon() : UCS = this.clickCenterRight()
+}
+
+object LoginFieldStates {
+    val ok0 = loginField.click()
 }
