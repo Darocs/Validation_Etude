@@ -5,10 +5,8 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
 import androidx.compose.ui.test.hasContentDescription
 import com.atiurin.ultron.core.compose.createDefaultUltronComposeRule
-import com.atiurin.ultron.core.compose.nodeinteraction.click
 import com.atiurin.ultron.core.compose.nodeinteraction.clickCenterRight
 import com.atiurin.ultron.extensions.assertIsDisplayed
-import com.atiurin.ultron.extensions.assertTextContains
 import com.atiurin.ultron.extensions.click
 import com.atiurin.ultron.extensions.setText
 import com.atiurin.ultron.page.Screen
@@ -19,7 +17,6 @@ import ru.polescanner.validation_etude.LocalSnackbarHostState
 import ru.polescanner.validation_etude.domain.general.DI
 import ru.polescanner.validation_etude.domain.general.DI.login
 import ru.polescanner.validation_etude.domain.general.NameRules
-import ru.polescanner.validation_etude.ui.reusable.components.AssertCheckBox.assertIsIndeterminate
 import ru.polescanner.validation_etude.ui.reusable.components.AssertStateDescription.assertStateDescriptionContains
 import ru.polescanner.validation_etude.ui.signin.SignInScreen.assertIsOkay0
 import ru.polescanner.validation_etude.ui.signin.SignInScreen.clickRightIcon
@@ -28,14 +25,6 @@ import ru.polescanner.validation_etude.ui.signin.SignInScreen.ok0
 import ru.polescanner.validation_etude.ui.signin.SignInScreen.passwordField
 import ru.polescanner.validation_etude.ui.signin.SignInScreen.rememberMe
 import ru.polescanner.validation_etude.ui.signin.SignInScreen.submitButton
-import ru.polescanner.validation_etude.ui.signin.extensions.LoginExtensions.loginInvalidMaxChars
-import ru.polescanner.validation_etude.ui.signin.extensions.LoginExtensions.loginInvalidMinChars
-import ru.polescanner.validation_etude.ui.signin.extensions.LoginExtensions.loginInvalidRegex
-import ru.polescanner.validation_etude.ui.signin.extensions.LoginExtensions.loginIsValid
-import ru.polescanner.validation_etude.ui.signin.extensions.PasswordExtensions.passwordInvalidMaxChars
-import ru.polescanner.validation_etude.ui.signin.extensions.PasswordExtensions.passwordInvalidMinChars
-import ru.polescanner.validation_etude.ui.signin.extensions.PasswordExtensions.passwordInvalidRegex
-import ru.polescanner.validation_etude.ui.signin.extensions.PasswordExtensions.passwordIsValid
 import ru.polescanner.validation_etude.ui.signin.extensions.UCS
 
 class SignInTest {
