@@ -205,5 +205,12 @@ object SignInScreen : Screen<SignInScreen>(){
         .assertContentDescriptionContains("supportingText")
         .assertStateDescriptionContains("valid")
 
+    fun UCS.assertIsMin(text: String) : UCS = this
+        .assertContentDescriptionContains("label*")
+        .assertTextContains(text)
+        .assertContentDescriptionContains("supportingText*")
+        .assertContentDescriptionContains("Min ${login?.min} chars")
+        .assertStateDescriptionContains("invalid")
+
     fun UCS.clickRightIcon() : UCS = this.clickCenterRight()
 }
