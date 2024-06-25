@@ -24,6 +24,7 @@ import ru.polescanner.validation_etude.ui.reusable.components.AssertStateDescrip
 import ru.polescanner.validation_etude.ui.signin.SignInScreen.assertIsOkay0
 import ru.polescanner.validation_etude.ui.signin.SignInScreen.clickRightIcon
 import ru.polescanner.validation_etude.ui.signin.SignInScreen.loginField
+import ru.polescanner.validation_etude.ui.signin.SignInScreen.ok0
 import ru.polescanner.validation_etude.ui.signin.SignInScreen.passwordField
 import ru.polescanner.validation_etude.ui.signin.SignInScreen.rememberMe
 import ru.polescanner.validation_etude.ui.signin.SignInScreen.submitButton
@@ -88,8 +89,6 @@ class SignInTest {
         val invalRegex1 = "A"
         val invalRegex2 = "AC"
         val invalRegex3 = "ACE"
-
-        val ok0 = loginField.click()
 
         // From ok0 to ok0
         ok0.clickRightIcon().assertIsOkay0()
@@ -160,6 +159,8 @@ object SignInScreen : Screen<SignInScreen>(){
     val passwordField = hasContentDescription("password")
     val rememberMe = hasContentDescription("checkBox")
     val submitButton = hasContentDescription("submit")
+
+    val ok0 = loginField.click()
 
     fun checkLogin() {
         loginField.assertTextContains("Login")
