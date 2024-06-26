@@ -184,6 +184,12 @@ class SignInTest {
         val inval2 = loginField.click().tapInvalChar(2).assertIsInval2()
         inval2.tapValidChar().assertIsInval3()
     }
+
+    @Test
+    fun `on inval2 tap invalid character`() {
+        val inval2 = loginField.click().tapInvalChar(2).assertIsInval2()
+        inval2.tapInvalChar().assertIsInval3()
+    }
 }
 
 object SignInScreen : Screen<SignInScreen>(){
