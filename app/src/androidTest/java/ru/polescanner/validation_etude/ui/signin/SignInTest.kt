@@ -247,6 +247,13 @@ class SignInTest {
         val inval3 = loginField.click().tapInvalChar(3).assertIsInval3()
         inval3.tapInvalChar().assertIsMax()
     }
+
+    // Max tests
+    @Test
+    fun `on max4 delete valid character to ok3`() {
+        val max = loginField.click().tapValidChar(4).assertIsMax()
+        max.tapBackspace().assertIsOkay3()
+    }
 }
 
 object SignInScreen : Screen<SignInScreen>(){
