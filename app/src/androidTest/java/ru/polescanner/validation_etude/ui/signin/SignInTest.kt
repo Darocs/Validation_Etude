@@ -27,6 +27,7 @@ import ru.polescanner.validation_etude.ui.signin.SignInScreen.submitButton
 import ru.polescanner.validation_etude.ui.signin.extensions.CommonExtensions.assertIsMin
 import ru.polescanner.validation_etude.ui.signin.extensions.CommonExtensions.assertIsOkay0
 import ru.polescanner.validation_etude.ui.signin.extensions.CommonExtensions.assertIsStart
+import ru.polescanner.validation_etude.ui.signin.extensions.LoginExtensions.assertIsInval2
 import ru.polescanner.validation_etude.ui.signin.extensions.LoginExtensions.assertIsOkay2
 
 class SignInTest {
@@ -118,6 +119,12 @@ class SignInTest {
     fun `on valid min tap valid character`() {
         val min = loginField.click().tapValidChar().assertIsMin(valid = true)
         min.tapValidChar().assertIsOkay2()
+    }
+
+    @Test
+    fun `on valid min tap invalid character`() {
+        val min = loginField.click().tapValidChar().assertIsMin(valid = true)
+        min.tapInvalChar().assertIsInval2() // ValidCh + invalidCh = regexError
     }
 }
 
