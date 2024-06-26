@@ -190,6 +190,13 @@ class SignInTest {
         val inval2 = loginField.click().tapInvalChar(2).assertIsInval2()
         inval2.tapInvalChar().assertIsInval3()
     }
+
+    // Okay3 tests
+    @Test
+    fun `on ok3 click right icon`() {
+        val ok3 = loginField.click().tapValidChar(3).assertIsOkay3()
+        ok3.clickRightIcon().assertIsOkay0()
+    }
 }
 
 object SignInScreen : Screen<SignInScreen>(){
