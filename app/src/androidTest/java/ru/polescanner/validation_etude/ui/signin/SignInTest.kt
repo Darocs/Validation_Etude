@@ -18,6 +18,7 @@ import ru.polescanner.validation_etude.domain.general.NameRules
 import ru.polescanner.validation_etude.ui.reusable.components.AssertStateDescription.assertStateDescriptionContains
 import ru.polescanner.validation_etude.ui.reusable.components.TextField.clickRightIcon
 import ru.polescanner.validation_etude.ui.reusable.components.TextField.tapBackspace
+import ru.polescanner.validation_etude.ui.reusable.components.TextField.tapInvalChar
 import ru.polescanner.validation_etude.ui.reusable.components.TextField.tapValidChar
 import ru.polescanner.validation_etude.ui.signin.SignInScreen.loginField
 import ru.polescanner.validation_etude.ui.signin.SignInScreen.passwordField
@@ -91,6 +92,12 @@ class SignInTest {
     fun `on ok0 tap valid character`() {
         val ok0 = loginField.click().assertIsOkay0()
         ok0.tapValidChar().assertIsMin(valid = true)
+    }
+
+    @Test
+    fun `on ok0 tap invalid character`() {
+        val ok0 = loginField.click().assertIsOkay0()
+        ok0.tapInvalChar().assertIsMin(valid = false)
     }
 }
 
