@@ -9,10 +9,12 @@ data class Config(
     val invalChar: Char = 'A'
 )
 
+val config: Config = Config()
+
 object LoginExtensions {
-    fun UCS.assertIsOkay2(text: String) : UCS = this
-        .assertTextContains(text)
+    fun UCS.assertIsOkay2() : UCS = this
         .assertContentDescriptionContains("label")
+        .assertTextContains(config.validChar.times(2))
         .assertContentDescriptionContains("supportingText")
         .assertStateDescriptionContains("valid")
 }
