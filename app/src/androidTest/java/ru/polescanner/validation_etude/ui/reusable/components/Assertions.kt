@@ -10,6 +10,7 @@ import androidx.compose.ui.test.SemanticsNodeInteraction
 import androidx.compose.ui.test.assert
 import androidx.compose.ui.test.hasStateDescription
 import com.atiurin.ultron.core.common.UltronOperationType
+import com.atiurin.ultron.core.compose.nodeinteraction.clickCenterRight
 import ru.polescanner.validation_etude.ui.signin.extensions.UCS
 
 object AssertCheckBox {
@@ -52,6 +53,8 @@ object TextField {
     fun UCS.getEditableText() : String? {
         return this.getNode().config.getOrNull(SemanticsProperties.EditableText)?.text
     }
+
+    fun UCS.clickRightIcon() : UCS = this.clickCenterRight()
 }
 
 enum class MyOperationType : UltronOperationType {

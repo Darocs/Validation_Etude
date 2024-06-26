@@ -5,7 +5,6 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
 import androidx.compose.ui.test.hasContentDescription
 import com.atiurin.ultron.core.compose.createDefaultUltronComposeRule
-import com.atiurin.ultron.core.compose.nodeinteraction.clickCenterRight
 import com.atiurin.ultron.extensions.assertIsDisplayed
 import com.atiurin.ultron.page.Screen
 import org.junit.Before
@@ -19,7 +18,6 @@ import ru.polescanner.validation_etude.ui.signin.SignInScreen.loginField
 import ru.polescanner.validation_etude.ui.signin.SignInScreen.passwordField
 import ru.polescanner.validation_etude.ui.signin.SignInScreen.rememberMe
 import ru.polescanner.validation_etude.ui.signin.SignInScreen.submitButton
-import ru.polescanner.validation_etude.ui.signin.extensions.UCS
 
 class SignInTest {
     
@@ -62,7 +60,5 @@ object SignInScreen : Screen<SignInScreen>(){
     val passwordField = hasContentDescription("password")
     val rememberMe = hasContentDescription("checkBox")
     val submitButton = hasContentDescription("submit")
-
-    fun UCS.clickRightIcon() : UCS = this.clickCenterRight()
 }
 
