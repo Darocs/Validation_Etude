@@ -3,6 +3,7 @@ package ru.polescanner.validation_etude.ui.signin.extensions
 import com.atiurin.ultron.core.compose.nodeinteraction.UltronComposeSemanticsNodeInteraction
 import ru.polescanner.validation_etude.domain.general.DI.login
 import ru.polescanner.validation_etude.ui.reusable.components.AssertStateDescription.assertStateDescriptionContains
+import ru.polescanner.validation_etude.ui.reusable.components.TextField.getEditableText
 
 data class Config(
     val validChar: Char = '1',
@@ -33,12 +34,13 @@ object CommonExtensions {
         .assertTextContains("Min ${login?.min} chars")
         .assertStateDescriptionContains("invalid")
 
-    fun UCS.assertIsMax(text: String) : UCS = this
-        .assertContentDescriptionContains("label*")
-        .assertTextContains(text)
-        .assertContentDescriptionContains("supportingText*")
-        .assertContentDescriptionContains("Max ${login?.max} chars")
-        .assertStateDescriptionContains("invalid")
+    fun UCS.assertIsMax() : UCS {
+        require(this.getEditableText()!!.length > 3)
+        return this.assertContentDescriptionContains("label*")
+            .assertContentDescriptionContains("supportingText*")
+            .assertTextContains("Max ${login?.max} chars")
+            .assertStateDescriptionContains("invalid")
+    }
 
     fun UCS.assertIsInvalidRegex(text: String) : UCS = this
         .assertContentDescriptionContains("label*")
