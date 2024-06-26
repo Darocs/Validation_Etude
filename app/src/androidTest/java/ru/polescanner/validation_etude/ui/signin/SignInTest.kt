@@ -25,6 +25,7 @@ import ru.polescanner.validation_etude.ui.signin.SignInScreen.passwordField
 import ru.polescanner.validation_etude.ui.signin.SignInScreen.rememberMe
 import ru.polescanner.validation_etude.ui.signin.SignInScreen.submitButton
 import ru.polescanner.validation_etude.ui.signin.extensions.CommonExtensions.assertIsInval3
+import ru.polescanner.validation_etude.ui.signin.extensions.CommonExtensions.assertIsMax
 import ru.polescanner.validation_etude.ui.signin.extensions.CommonExtensions.assertIsMin
 import ru.polescanner.validation_etude.ui.signin.extensions.CommonExtensions.assertIsOkay0
 import ru.polescanner.validation_etude.ui.signin.extensions.CommonExtensions.assertIsOkay3
@@ -202,6 +203,12 @@ class SignInTest {
     fun `on ok3 tap backspace`() {
         val ok3 = loginField.click().tapValidChar(3).assertIsOkay3()
         ok3.tapBackspace().assertIsOkay2()
+    }
+
+    @Test
+    fun `on ok3 tap valid character`() {
+        val ok3 = loginField.click().tapValidChar(3).assertIsOkay3()
+        ok3.tapValidChar().assertIsMax()
     }
 }
 
