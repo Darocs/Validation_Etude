@@ -75,7 +75,7 @@ class SignInTest {
         start.click().assertIsOkay0()
     }
 
-    //Okay0 tests
+    // Okay0 tests
     @Test
     fun `on ok0 click right icon`() {
         val ok0 = loginField.click().assertIsOkay0()
@@ -98,6 +98,13 @@ class SignInTest {
     fun `on ok0 tap invalid character`() {
         val ok0 = loginField.click().assertIsOkay0()
         ok0.tapInvalChar().assertIsMin(valid = false)
+    }
+
+    // Min tests
+    @Test
+    fun `on valid min tap backspace`() {
+        val min = loginField.click().tapValidChar().assertIsMin(valid = true)
+        min.tapBackspace().assertIsOkay0()
     }
 }
 
