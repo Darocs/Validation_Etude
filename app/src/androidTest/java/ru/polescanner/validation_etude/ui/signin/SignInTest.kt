@@ -126,6 +126,12 @@ class SignInTest {
         val min = loginField.click().tapValidChar().assertIsMin(valid = true)
         min.tapInvalChar().assertIsInval2() // ValidCh + invalidCh = regexError
     }
+
+    @Test
+    fun `on invalid min tap invalid character`() {
+        val min = loginField.click().tapInvalChar().assertIsMin(valid = false)
+        min.tapInvalChar().assertIsInval2() // InvalidCh + invalidCh = regexError
+    }
 }
 
 object SignInScreen : Screen<SignInScreen>(){
