@@ -4,6 +4,11 @@ import com.atiurin.ultron.core.compose.nodeinteraction.UltronComposeSemanticsNod
 import ru.polescanner.validation_etude.domain.general.DI.login
 import ru.polescanner.validation_etude.ui.reusable.components.AssertStateDescription.assertStateDescriptionContains
 
+data class Config(
+    val validChar: Char = '1',
+    val invalChar: Char = 'A'
+)
+
 object LoginExtensions {
     fun UCS.assertIsOkay2(text: String) : UCS = this
         .assertTextContains(text)
