@@ -8,6 +8,7 @@ import com.atiurin.ultron.core.compose.createDefaultUltronComposeRule
 import com.atiurin.ultron.core.compose.nodeinteraction.click
 import com.atiurin.ultron.extensions.assertIsDisplayed
 import com.atiurin.ultron.extensions.clearText
+import com.atiurin.ultron.extensions.click
 import com.atiurin.ultron.page.Screen
 import org.junit.Before
 import org.junit.Rule
@@ -67,6 +68,12 @@ class SignInTest {
     fun `from start click on loginField`() {
         val start = loginField.clearText().assertIsDisplayed()
         start.click().assertIsOkay0()
+    }
+
+    @Test
+    fun `from ok0 click right icon`() {
+        val ok0 = loginField.click().assertIsOkay0()
+        ok0.clickRightIcon().assertIsOkay0()
     }
 }
 
