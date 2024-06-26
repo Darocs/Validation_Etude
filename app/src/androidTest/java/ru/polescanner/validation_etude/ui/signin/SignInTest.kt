@@ -168,7 +168,7 @@ class SignInTest {
 
     // Inval2 tests
     @Test
-    fun `on inval2 with last valid char tap backspace`() {
+    fun `on inval2 delete valid character`() {
         val inval2 = loginField.click().tapInvalChar().tapValidChar().assertIsInval2()
         inval2.tapBackspace().assertIsMin(valid = false) // inval - valid = min(inval)
     }
