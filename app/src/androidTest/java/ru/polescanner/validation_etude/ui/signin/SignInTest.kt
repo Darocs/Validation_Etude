@@ -17,6 +17,7 @@ import ru.polescanner.validation_etude.domain.general.DI
 import ru.polescanner.validation_etude.domain.general.NameRules
 import ru.polescanner.validation_etude.ui.reusable.components.AssertStateDescription.assertStateDescriptionContains
 import ru.polescanner.validation_etude.ui.reusable.components.TextField.clickRightIcon
+import ru.polescanner.validation_etude.ui.reusable.components.TextField.tapBackspace
 import ru.polescanner.validation_etude.ui.signin.SignInScreen.loginField
 import ru.polescanner.validation_etude.ui.signin.SignInScreen.passwordField
 import ru.polescanner.validation_etude.ui.signin.SignInScreen.rememberMe
@@ -47,6 +48,7 @@ class SignInTest {
         }
     }
 
+    // Screen tests
     @Test
     fun signInScreenTest() {
         loginField.assertIsDisplayed().assertHasClickAction()
@@ -57,6 +59,7 @@ class SignInTest {
         submitButton.assertIsDisplayed().assertHasClickAction().assertIsNotFocused()
     }
 
+    // Start tests
     @Test
     fun `from start click on right icon`() {
         val start = loginField.assertIsDisplayed()
@@ -69,10 +72,17 @@ class SignInTest {
         start.click().assertIsOkay0()
     }
 
+    //Okay0 tests
     @Test
-    fun `from ok0 click right icon`() {
+    fun `on ok0 click right icon`() {
         val ok0 = loginField.click().assertIsOkay0()
         ok0.clickRightIcon().assertIsOkay0()
+    }
+
+    @Test
+    fun `on ok0 tap backspace`() {
+        val ok0 = loginField.click().assertIsOkay0()
+        ok0.tapBackspace().assertIsOkay0()
     }
 }
 
