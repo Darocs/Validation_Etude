@@ -10,4 +10,9 @@ object TextField {
     }
 
     fun UCS.clickRightIcon() : UCS = this.clickCenterRight()
+
+    fun UCS.tapBackspace(times: Int = 1) : UCS {
+        val text = this.getEditableText() ?: ""
+        return this.setText(text.dropLast(times))
+    }
 }
