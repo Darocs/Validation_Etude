@@ -3,14 +3,12 @@
 package ru.polescanner.validation_etude.ui.reusable.components
 
 import androidx.compose.ui.semantics.SemanticsProperties
-import androidx.compose.ui.semantics.getOrNull
 import androidx.compose.ui.state.ToggleableState
 import androidx.compose.ui.test.SemanticsMatcher
 import androidx.compose.ui.test.SemanticsNodeInteraction
 import androidx.compose.ui.test.assert
 import androidx.compose.ui.test.hasStateDescription
 import com.atiurin.ultron.core.common.UltronOperationType
-import com.atiurin.ultron.core.compose.nodeinteraction.clickCenterRight
 import ru.polescanner.validation_etude.ui.signin.extensions.UCS
 
 object AssertCheckBox {
@@ -47,14 +45,6 @@ object AssertStateDescription {
 
     private fun SemanticsNodeInteraction.assertStateDescriptionContains(value: String): SemanticsNodeInteraction =
         assert(hasStateDescription(value = value))
-}
-
-object TextField {
-    fun UCS.getEditableText() : String? {
-        return this.getNode().config.getOrNull(SemanticsProperties.EditableText)?.text
-    }
-
-    fun UCS.clickRightIcon() : UCS = this.clickCenterRight()
 }
 
 enum class MyOperationType : UltronOperationType {
