@@ -5,6 +5,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
 import androidx.compose.ui.test.hasContentDescription
 import com.atiurin.ultron.core.compose.createDefaultUltronComposeRule
+import com.atiurin.ultron.core.compose.nodeinteraction.click
 import com.atiurin.ultron.extensions.assertIsDisplayed
 import com.atiurin.ultron.extensions.clearText
 import com.atiurin.ultron.page.Screen
@@ -20,6 +21,7 @@ import ru.polescanner.validation_etude.ui.signin.SignInScreen.loginField
 import ru.polescanner.validation_etude.ui.signin.SignInScreen.passwordField
 import ru.polescanner.validation_etude.ui.signin.SignInScreen.rememberMe
 import ru.polescanner.validation_etude.ui.signin.SignInScreen.submitButton
+import ru.polescanner.validation_etude.ui.signin.extensions.CommonExtensions.assertIsOkay0
 import ru.polescanner.validation_etude.ui.signin.extensions.CommonExtensions.assertIsStart
 
 class SignInTest {
@@ -56,9 +58,15 @@ class SignInTest {
     }
 
     @Test
-    fun `start click right icon`() {
+    fun `from start click on right icon`() {
         val start = loginField.clearText().assertIsDisplayed()
         start.clickRightIcon().assertIsStart()
+    }
+
+    @Test
+    fun `from start click on loginField`() {
+        val start = loginField.clearText().assertIsDisplayed()
+        start.click().assertIsOkay0()
     }
 }
 
