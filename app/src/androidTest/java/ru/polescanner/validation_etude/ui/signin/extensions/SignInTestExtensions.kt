@@ -32,6 +32,13 @@ object LoginExtensions {
 }
 
 object CommonExtensions {
+    fun UCS.assertIsStart() : UCS = this
+        .assertIsNotFocused()
+        .assertContentDescriptionContains("label")
+        .assertTextContains("")
+        .assertContentDescriptionContains("supportingText")
+        .assertStateDescriptionContains("valid")
+
 
     fun UCS.assertIsOkay0() : UCS = this
         .assertTextContains("")
