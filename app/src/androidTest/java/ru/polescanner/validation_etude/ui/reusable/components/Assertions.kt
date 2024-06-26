@@ -3,6 +3,7 @@
 package ru.polescanner.validation_etude.ui.reusable.components
 
 import androidx.compose.ui.semantics.SemanticsProperties
+import androidx.compose.ui.semantics.getOrNull
 import androidx.compose.ui.state.ToggleableState
 import androidx.compose.ui.test.SemanticsMatcher
 import androidx.compose.ui.test.SemanticsNodeInteraction
@@ -45,6 +46,12 @@ object AssertStateDescription {
 
     private fun SemanticsNodeInteraction.assertStateDescriptionContains(value: String): SemanticsNodeInteraction =
         assert(hasStateDescription(value = value))
+}
+
+object TextField {
+    fun UCS.getEditableText() : String? {
+        return this.getNode().config.getOrNull(SemanticsProperties.EditableText)?.text
+    }
 }
 
 enum class MyOperationType : UltronOperationType {
