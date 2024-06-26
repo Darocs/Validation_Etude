@@ -7,7 +7,6 @@ import androidx.compose.ui.test.hasContentDescription
 import com.atiurin.ultron.core.compose.createDefaultUltronComposeRule
 import com.atiurin.ultron.core.compose.nodeinteraction.click
 import com.atiurin.ultron.extensions.assertIsDisplayed
-import com.atiurin.ultron.extensions.clearText
 import com.atiurin.ultron.extensions.click
 import com.atiurin.ultron.page.Screen
 import org.junit.Before
@@ -60,13 +59,13 @@ class SignInTest {
 
     @Test
     fun `from start click on right icon`() {
-        val start = loginField.clearText().assertIsDisplayed()
+        val start = loginField.assertIsDisplayed()
         start.clickRightIcon().assertIsStart()
     }
 
     @Test
     fun `from start click on loginField`() {
-        val start = loginField.clearText().assertIsDisplayed()
+        val start = loginField.assertIsDisplayed()
         start.click().assertIsOkay0()
     }
 
