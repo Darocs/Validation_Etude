@@ -27,6 +27,7 @@ import ru.polescanner.validation_etude.ui.signin.SignInScreen.submitButton
 import ru.polescanner.validation_etude.ui.signin.extensions.CommonExtensions.assertIsMin
 import ru.polescanner.validation_etude.ui.signin.extensions.CommonExtensions.assertIsOkay0
 import ru.polescanner.validation_etude.ui.signin.extensions.CommonExtensions.assertIsStart
+import ru.polescanner.validation_etude.ui.signin.extensions.LoginExtensions.assertIsOkay2
 
 class SignInTest {
     
@@ -104,6 +105,12 @@ class SignInTest {
     @Test
     fun `on valid min tap backspace`() {
         val min = loginField.click().tapValidChar().assertIsMin(valid = true)
+        min.tapBackspace().assertIsOkay0()
+    }
+
+    @Test
+    fun `on invalid min tap backspace`() {
+        val min = loginField.click().tapInvalChar().assertIsMin(valid = false)
         min.tapBackspace().assertIsOkay0()
     }
 }
