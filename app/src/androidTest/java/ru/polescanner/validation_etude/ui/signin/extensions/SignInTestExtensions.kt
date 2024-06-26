@@ -32,6 +32,7 @@ object LoginExtensions {
 }
 
 object CommonExtensions {
+
     fun UCS.assertIsOkay0() : UCS = this
         .assertTextContains("")
         .assertContentDescriptionContains("label")
@@ -45,13 +46,11 @@ object CommonExtensions {
         .assertTextContains("Min ${login?.min} chars")
         .assertStateDescriptionContains("invalid")
 
-    fun UCS.assertIsMax() : UCS {
-        require(this.getEditableText()!!.length > 3)
-        return this.assertContentDescriptionContains("label*")
-            .assertContentDescriptionContains("supportingText*")
-            .assertTextContains("Max ${login?.max} chars")
-            .assertStateDescriptionContains("invalid")
-    }
+    fun UCS.assertIsOkay3() : UCS = this
+        .assertContentDescriptionContains("label")
+        .assertTextContains(config.validChar.times(3))
+        .assertContentDescriptionContains("supportingText")
+        .assertStateDescriptionContains("valid")
 
     fun UCS.assertIsInval3() : UCS {
         val text = this.getEditableText()!!
@@ -61,6 +60,14 @@ object CommonExtensions {
             .assertContentDescriptionContains("label*")
             .assertContentDescriptionContains("supportingText*")
             .assertTextContains("Allowed chars: ${login?.regex}")
+            .assertStateDescriptionContains("invalid")
+    }
+
+    fun UCS.assertIsMax() : UCS {
+        require(this.getEditableText()!!.length > 3)
+        return this.assertContentDescriptionContains("label*")
+            .assertContentDescriptionContains("supportingText*")
+            .assertTextContains("Max ${login?.max} chars")
             .assertStateDescriptionContains("invalid")
     }
 }
