@@ -47,3 +47,5 @@ object CommonExtensions {
 }
 
 typealias UCS = UltronComposeSemanticsNodeInteraction
+
+fun Char.times(n: Int = 1) : String = "$this".repeat(n)
