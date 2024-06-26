@@ -144,25 +144,25 @@ class SignInTest {
     // Okay2 tests
     @Test
     fun `on ok2 click right icon`() {
-        val ok2 = loginField.click().clearText().tapValidChar(2).assertIsOkay2()
+        val ok2 = loginField.click().tapValidChar(2).assertIsOkay2()
         ok2.clickRightIcon().assertIsOkay0()
     }
 
     @Test
     fun `on ok2 tap backspace`() {
-        val ok2 = loginField.click().clearText().tapValidChar(2).assertIsOkay2()
+        val ok2 = loginField.click().tapValidChar(2).assertIsOkay2()
         ok2.tapBackspace().assertIsMin(valid = true)
     }
 
     @Test
     fun `on ok2 tap valid character`() {
-        val ok2 = loginField.click().clearText().tapValidChar(2).assertIsOkay2()
+        val ok2 = loginField.click().tapValidChar(2).assertIsOkay2()
         ok2.tapValidChar().assertIsOkay3()
     }
 
     @Test
     fun `on ok2 tap invalid character`() {
-        val ok2 = loginField.click().clearText().tapValidChar(2).assertIsOkay2()
+        val ok2 = loginField.click().tapValidChar(2).assertIsOkay2()
         ok2.tapInvalChar().assertIsInval3()
     }
 }
