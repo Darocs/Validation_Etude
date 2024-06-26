@@ -210,6 +210,12 @@ class SignInTest {
         val ok3 = loginField.click().tapValidChar(3).assertIsOkay3()
         ok3.tapValidChar().assertIsMax()
     }
+
+    @Test
+    fun `on ok3 tap invalid character`() {
+        val ok3 = loginField.click().tapValidChar(3).assertIsOkay3()
+        ok3.tapInvalChar().assertIsMax()
+    }
 }
 
 object SignInScreen : Screen<SignInScreen>(){
