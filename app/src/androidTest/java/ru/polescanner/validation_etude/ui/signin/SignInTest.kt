@@ -197,6 +197,12 @@ class SignInTest {
         val ok3 = loginField.click().tapValidChar(3).assertIsOkay3()
         ok3.clickRightIcon().assertIsOkay0()
     }
+
+    @Test
+    fun `on ok3 tap backspace`() {
+        val ok3 = loginField.click().tapValidChar(3).assertIsOkay3()
+        ok3.tapBackspace().assertIsOkay2()
+    }
 }
 
 object SignInScreen : Screen<SignInScreen>(){
