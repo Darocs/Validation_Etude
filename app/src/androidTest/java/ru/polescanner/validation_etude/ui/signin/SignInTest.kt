@@ -223,6 +223,12 @@ class SignInTest {
         val inval3 = loginField.click().tapInvalChar(2).tapValidChar().assertIsInval3()
         inval3.tapBackspace().assertIsInval2()
     }
+
+    @Test
+    fun `on inval3 delete inval character to ok2`() {
+        val inval3 = loginField.click().tapValidChar(2).tapInvalChar(1).assertIsInval3()
+        inval3.tapBackspace().assertIsOkay2()
+    }
 }
 
 object SignInScreen : Screen<SignInScreen>(){
