@@ -152,6 +152,3 @@ object SignInScreen : Screen<SignInScreen>(){
     fun UCS.clickRightIcon() : UCS = this.clickCenterRight()
 }
 
-object LoginFieldStates {
-    val ok0 = loginField.click()
-}
