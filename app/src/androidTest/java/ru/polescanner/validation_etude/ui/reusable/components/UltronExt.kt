@@ -22,4 +22,7 @@ object TextField {
 
     fun UCS.tapValidChar(times: Int = 1) : UCS = this
         .typeText(config.validChar.times(times))
+
+    fun UCS.tapInvalChar(times: Int = 1) : UCS = this
+        .typeText(config.invalChar.times(times))
 }
