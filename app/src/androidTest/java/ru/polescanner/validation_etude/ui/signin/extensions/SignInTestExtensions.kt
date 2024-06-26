@@ -26,11 +26,11 @@ object CommonExtensions {
         .assertContentDescriptionContains("supportingText")
         .assertStateDescriptionContains("valid")
 
-    fun UCS.assertIsMin(text: String) : UCS = this
+    fun UCS.assertIsMin(valid: Boolean) : UCS = this
         .assertContentDescriptionContains("label*")
-        .assertTextContains(text)
+        .assertTextContains("${if (valid) config.validChar else config.invalChar}")
         .assertContentDescriptionContains("supportingText*")
-        .assertContentDescriptionContains("Min ${login?.min} chars")
+        .assertTextContains("Min ${login?.min} chars")
         .assertStateDescriptionContains("invalid")
 
     fun UCS.assertIsMax(text: String) : UCS = this
