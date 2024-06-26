@@ -52,6 +52,17 @@ object CommonExtensions {
             .assertTextContains("Max ${login?.max} chars")
             .assertStateDescriptionContains("invalid")
     }
+
+    fun UCS.assertIsInval3() : UCS {
+        val text = this.getEditableText()!!
+        require(config.invalChar in text) { "Text doesn't have inval char" }
+        require(text.length == 3) { "Inval2 must contain only 3 characters" }
+        return this
+            .assertContentDescriptionContains("label*")
+            .assertContentDescriptionContains("supportingText*")
+            .assertTextContains("Allowed chars: ${login?.regex}")
+            .assertStateDescriptionContains("invalid")
+    }
 }
 
 typealias UCS = UltronComposeSemanticsNodeInteraction
