@@ -35,6 +35,7 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.stateDescription
@@ -96,7 +97,7 @@ fun CustomOutlinedTextField(
                 focusManager.clearFocus()
                 focusRequester.requestFocus()
             }
-            .semantics(mergeDescendants = true) {
+            .semantics {
                 stateDescription = if (isError) "invalid" else "valid"
             },
         singleLine = singleLine,
@@ -128,7 +129,8 @@ fun CustomOutlinedTextField(
             placeholder = {
                 Text(
                     text = placeholder.asString(),
-                    style = MaterialTheme.typography.bodySmall.copy(fontSize = 13.sp)
+                    style = MaterialTheme.typography.bodySmall.copy(fontSize = 13.sp),
+                    modifier = Modifier.clearAndSetSemantics { contentDescription = "placeholder" }
                 )
             },
             isError = isError,
@@ -165,7 +167,10 @@ fun CustomOutlinedTextField(
                 Text(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .semantics { contentDescription = if (isError) "supportingText*" else "supportingText" },
+                        .semantics {
+                            contentDescription =
+                                if (isError) "supportingText*" else "supportingText"
+                        },
                     text = supportingText.asString(),
                     style = MaterialTheme.typography.labelSmall,
                     color = if (isError) colorScheme.error else colorScheme.onBackground
