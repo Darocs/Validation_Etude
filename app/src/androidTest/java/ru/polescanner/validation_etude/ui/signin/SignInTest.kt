@@ -165,6 +165,13 @@ class SignInTest {
         val ok2 = loginField.click().tapValidChar(2).assertIsOkay2()
         ok2.tapInvalChar().assertIsInval3()
     }
+
+    // Inval2 tests
+    @Test
+    fun `on inval2 with last valid char tap backspace`() {
+        val inval2 = loginField.click().tapInvalChar().tapValidChar().assertIsInval2()
+        inval2.tapBackspace().assertIsMin(valid = false) // inval - valid = min(inval)
+    }
 }
 
 object SignInScreen : Screen<SignInScreen>(){
